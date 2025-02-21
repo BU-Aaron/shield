@@ -1,0 +1,26 @@
+.value {
+    font-size: 1.5rem;
+}
+
+.diff {
+    line-height: 1;
+    display: flex;
+    align-items: center;
+}
+
+.doubleHeight {
+    height: 100%;
+}
+
+.card {
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.title {
+    margin-top: 10px;
+    font-weight: 500;
+}

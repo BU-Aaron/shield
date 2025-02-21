@@ -1,0 +1,28 @@
+.card {
+    padding: 2rem 1.5rem;
+    width: 100%;
+    overflow: hidden;
+    margin-top: 1.5rem;
+}
+
+@media (min-width: 640px) {
+    .card {
+        max-width: 28rem; /* sm:max-w-md */
+        border-radius: 0.375rem; /* sm:rounded-lg */
+    }
+}
+
+@media (max-width: 640px) {
+    .card {
+        padding: 1rem; /* Reduce padding for mobile */
+        box-shadow: none; /* Remove shadow for mobile */
+    }
+}
+
+.flexContainer {
+    min-height: 100vh; /* Ensure full height on mobile */
+}
+
+.logo {
+    fill: light-dark(var(--mantine-color-dark), var(--mantine-color-gray-4));
+}

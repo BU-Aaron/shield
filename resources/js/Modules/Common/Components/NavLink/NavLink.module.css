@@ -1,0 +1,29 @@
+.mainLink {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    outline: none;
+
+    color: light-dark(var(--mantine-color-gray-6), var(--mantine-color-dark-1));
+    border-bottom: rem(2px) solid transparent;
+    transition: border-color 100ms ease, color 100ms ease;
+
+    @mixin hover {
+        color: light-dark(
+            var(--mantine-color-black),
+            var(--mantine-color-white)
+        );
+        text-decoration: none;
+    }
+
+    &[data-active="true"] {
+        color: light-dark(
+            var(--mantine-color-black),
+            var(--mantine-color-white)
+        );
+        border-bottom-color: var(--mantine-primary-color-5);
+    }
+}

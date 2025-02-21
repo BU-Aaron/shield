@@ -1,0 +1,97 @@
+.screen {
+    min-height: 100vh;
+    background-color: light-dark(
+        var(--mantine-color-gray-0),
+        var(--mantine-color-dark-6)
+    );
+}
+
+.header {
+    background-color: light-dark(
+        var(--mantine-color-white),
+        var(--mantine-color-dark-6)
+    );
+
+    border-bottom: rem(1px) solid var(--mantine-color-gray-1);
+}
+
+.headerContainer {
+    padding-left: 1rem; /* px-4 */
+    padding-right: 1rem; /* px-4 */
+    margin-left: auto; /* mx-auto */
+    margin-right: auto; /* mx-auto */
+    max-width: 80rem; /* max-w-7xl */
+}
+
+@media (min-width: $mantine-breakpoint-sm) {
+    .headerContainer {
+        padding-left: 1.5rem; /* sm:px-6 */
+        padding-right: 1.5rem; /* sm:px-6 */
+    }
+}
+
+@media (min-width: 1024px) {
+    .headerContainer {
+        padding-left: 2rem; /* lg:px-8 */
+        padding-right: 2rem; /* lg:px-8 */
+    }
+}
+
+.navLink {
+    display: none; /* hidden */
+    margin-inline-start: 2.5rem; /* sm:ms-10 */
+    gap: 2rem; /* space-x-8 */
+}
+
+@media (min-width: $mantine-breakpoint-sm) {
+    .navLink {
+        display: flex; /* sm:flex */
+        margin-top: -1px; /* sm:-my-px */
+        margin-bottom: -1px; /* sm:-my-px */
+    }
+}
+
+.flexContainer {
+    display: none; /* hidden */
+    margin-inline-start: 1.5rem; /* sm:ms-6 */
+    align-items: center; /* sm:items-center */
+}
+
+@media (min-width: $mantine-breakpoint-sm) {
+    .flexContainer {
+        display: flex; /* sm:flex */
+    }
+}
+
+.relativeContainer {
+    position: relative; /* relative */
+    margin-inline-start: 0.75rem; /* ms-3 */
+}
+
+.subheader {
+    background-color: light-dark(
+        var(--mantine-color-white),
+        var(--mantine-color-dark-6)
+    );
+    box-shadow: var(--mantine-shadow-xs);
+}
+
+.subheaderContainer {
+    padding: 1.5rem 1rem;
+    margin: 0 auto;
+    max-width: 80rem;
+}
+
+@media (min-width: 640px) {
+    .subheaderContainer {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .subheaderContainer {
+        padding-left: 2rem;
+        padding-right: 2rem;
+    }
+}
