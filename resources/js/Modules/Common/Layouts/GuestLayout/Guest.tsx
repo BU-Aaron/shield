@@ -29,7 +29,7 @@ export default function Guest({ children }: PropsWithChildren) {
 
                 {/* Powered by Arquivo Footer */}
                 <Text size="sm" ta="center" mt="md" c="dimmed">
-                    Powered by Arquivo
+                    Powered by RACU 5
                 </Text>
             </Paper>
         </Flex>

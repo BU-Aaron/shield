@@ -18,10 +18,10 @@ export default function LoginForm() {
             <Stack gap={32}>
                 <div>
                     <Text fw={700} fz={24} ta="center">
-                        Login to
+                        Login
                     </Text>
                     <Text fw={500} fz={16} ta="center" c="gray.6">
-                        BU International Relations Office
+                        RACU 5 Document Management System
                     </Text>
                 </div>
 

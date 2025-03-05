@@ -21,42 +21,42 @@ const icons = {
 export function StatCards({ dashboard }: StatCardsProps) {
     const data = [
         {
-            title: "Review Accepted",
+            title: "INV",
             icon: "review_accepted",
             value: dashboard.number_of_review_accepted,
             color: "teal",
             statusParam: "reviewal_accepted",
         },
         {
-            title: "Review Pending",
+            title: "INQ",
             icon: "review_pending",
             value: dashboard.number_of_review_pending,
             color: "orange",
             statusParam: "reviewal_pending",
         },
         {
-            title: "Review Rejected",
+            title: "UI",
             icon: "review_rejected",
             value: dashboard.number_of_review_rejected,
             color: "red",
             statusParam: "reviewal_rejected",
         },
         {
-            title: "Approval Accepted",
+            title: "Forensic Reports",
             icon: "approval_accepted",
             value: dashboard.number_of_approval_accepted,
             color: "green",
             statusParam: "approval_accepted",
         },
         {
-            title: "Approval Pending",
+            title: "Finance/Invest",
             icon: "approval_pending",
             value: dashboard.number_of_approval_pending,
             color: "orange",
             statusParam: "approval_pending",
         },
         {
-            title: "Approval Rejected",
+            title: "Inventory Reports",
             icon: "approval_rejected",
             value: dashboard.number_of_approval_rejected,
             color: "red",

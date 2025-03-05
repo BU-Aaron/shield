@@ -226,7 +226,7 @@ const DocumentPropertiesPage: React.FC<IProps> = ({
                                 </FileButton>
                             )}
 
-                        {!isArchived &&
+                        {/*{!isArchived &&
                             (userRole === "editor" || userRole === "admin") && (
                                 <Button
                                     variant="subtle"
@@ -266,7 +266,7 @@ const DocumentPropertiesPage: React.FC<IProps> = ({
                                     {hasApproval ? "View" : "Start"} Approval
                                     Process
                                 </Button>
-                            )}
+                            )}*/}
 
                         <Button
                             variant="subtle"
@@ -293,7 +293,7 @@ const DocumentPropertiesPage: React.FC<IProps> = ({
                                     justify="left"
                                     onClick={() => openModal("shareDocument")}
                                 >
-                                    Share Document
+                                    Share Access
                                 </Button>
                             )}
 

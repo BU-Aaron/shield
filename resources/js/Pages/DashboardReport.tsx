@@ -297,27 +297,27 @@ const DashboardReportPage: React.FC<DashboardReportProps> = ({
                                 data={[
                                     {
                                         value: "reviewal_accepted",
-                                        label: "Review Accepted",
+                                        label: "INV",
                                     },
                                     {
                                         value: "reviewal_rejected",
-                                        label: "Review Rejected",
+                                        label: "INQ",
                                     },
                                     {
                                         value: "reviewal_pending",
-                                        label: "Review Pending",
+                                        label: "UI",
                                     },
                                     {
                                         value: "approval_accepted",
-                                        label: "Approval Accepted",
+                                        label: "Forensic Reports",
                                     },
                                     {
                                         value: "approval_rejected",
-                                        label: "Approval Rejected",
+                                        label: "Finance/Invest",
                                     },
                                     {
                                         value: "approval_pending",
-                                        label: "Approval Pending",
+                                        label: "Inventory Reports",
                                     },
                                 ]}
                                 style={{ width: 200 }}

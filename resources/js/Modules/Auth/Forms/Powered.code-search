@@ -1,0 +1,11 @@
+# Query: Powered
+# ContextLines: 1
+
+2 results - 1 file
+
+resources/js/Modules/Common/Layouts/GuestLayout/Guest.tsx:
+  29  
+  30:                 {/* Powered by Arquivo Footer */}
+  31                  <Text size="sm" ta="center" mt="md" c="dimmed">
+  32:                     Powered by RACU 5
+  33                  </Text>
