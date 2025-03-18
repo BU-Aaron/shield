@@ -73,7 +73,7 @@ export default function LoginForm() {
                         radius="md"
                         fullWidth
                     >
-                        Sign in
+                        Login
                     </Button>
                 </Flex>
             </Stack>

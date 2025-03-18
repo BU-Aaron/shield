@@ -22,7 +22,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({ notifications }) 
             <Head title="Notifications" />
             <Stack px={8} py={8} gap={24}>
                 <Text component="h2" size="xl" fw={600} color="gray.8">
-                    Your Pending Approvals
+                    Notifications
                 </Text>
 
                 {notifications.length > 0 ? (
@@ -88,7 +88,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({ notifications }) 
                     />
                 ) : (
                     <Text size="md" color="dimmed">
-                        You have no pending approvals.
+            
                     </Text>
                 )}
             </Stack>

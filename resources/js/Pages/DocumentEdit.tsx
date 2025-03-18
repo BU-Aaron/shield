@@ -111,7 +111,7 @@ export default function DocumentEditPage({ document, itemAncestors }: IProps) {
                             }
                         />
 
-                        <DatePickerInput
+                        {/*<DatePickerInput
                             label="Due Date"
                             placeholder="Select due date"
                             value={
@@ -125,7 +125,7 @@ export default function DocumentEditPage({ document, itemAncestors }: IProps) {
                                     date?.toISOString() ?? undefined
                                 )
                             }
-                        />
+                        />*/}
                     </Stack>
 
                     <Stack gap={12} mt={16}>

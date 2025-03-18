@@ -24,7 +24,7 @@ const TrashSelectedToolbar: React.FC<IProps> = ({ selectedIds }) => {
                 leftSection={<IconTrash size={18} />}
                 onClick={() => openModal("permanentDelete")}
             >
-                Delete Forever
+                Delete Permanently
             </Button>
 
             <Button

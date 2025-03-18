@@ -31,9 +31,9 @@ const NotificationMenu: React.FC<NotificationMenuProps> = ({ notifications }) =>
             </Menu.Target>
 
             <Menu.Dropdown>
-                <Menu.Label>Pending Approvals</Menu.Label>
+                <Menu.Label></Menu.Label>
                 {notifications?.length === 0 ? (
-                    <Menu.Item disabled>No pending approvals.</Menu.Item>
+                    <Menu.Item disabled></Menu.Item>
                 ) : (
                     <ScrollArea style={{ height: 200 }}>
                         {notifications?.map(notification => (

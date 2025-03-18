@@ -18,7 +18,7 @@ const PermanentDeleteForm: React.FC<PermanentDeleteModalProps> = ({
             onClose={() => closeModal("permanentDelete")}
             title={
                 <Text fw="bold" size="lg">
-                    Delete Forever
+                    Delete Permanently
                 </Text>
             }
             size={550}
