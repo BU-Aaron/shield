@@ -8,6 +8,7 @@ use Modules\DocumentApproval\Actions\CreateDocumentApprovalFromWorkflowAction;
 use Modules\Item\Actions\CreateItemAction;
 use Modules\Item\Data\CreateItemData;
 use Modules\NumberingScheme\Actions\ApplyDocumentNumberAction;
+use Modules\Folder\Actions\CreateFolderAction;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
@@ -17,94 +18,120 @@ class UploadDocumentAction
         protected CreateItemAction $createItemAction,
         protected CreateDocumentApprovalFromWorkflowAction $createDocumentApprovalFromWorkflowAction,
         protected ApplyDocumentNumberAction $applyDocumentNumberAction,
+        protected CreateFolderAction $createFolderAction
     ) {}
 
     public function execute(UploadDocumentData $data): array
     {
         $documents = [];
 
+        // Group files by folder path if available.
+        $groupedFiles = [];
         foreach ($data->files as $fileData) {
-            $uploadedFile = $fileData->getUploadedFile();
+            // If relativePath is set, use its directory.
+            $relativePath = property_exists($fileData, 'relativePath') ? $fileData->relativePath : '';
+            $groupKey = '';
+            if (!empty($relativePath)) {
+                $dirname = pathinfo($relativePath, PATHINFO_DIRNAME);
+                if ($dirname !== '.' && $dirname !== '') {
+                    $groupKey = $dirname;
+                }
+            }
+            $groupedFiles[$groupKey][] = $fileData;
+        }
 
-            // Generate a unique name within the folder
-            $originalName = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
-            $extension = $uploadedFile->getClientOriginalExtension();
-            $newName = $originalName . '.' . $extension;
-            $counter = 1;
+        // Process each file group.
+        foreach ($groupedFiles as $folderPath => $filesGroup) {
+            $currentParentId = $data->parent_id;
 
-            while (
-                Document::where('name', $newName)
-                ->whereHas('item', function ($query) use ($data) {
-                    $query->where('parent_id', $data->parent_id);
-                })
-                ->exists()
-            ) {
-                $counter++;
-                $newName = $originalName . " ({$counter})." . $extension;
+            // If there is a folder path then create a folder for these files.
+            if ($folderPath !== '') {
+                // Use the last segment of the folder path as the folder name.
+                $folderName = basename($folderPath);
+                $folderData = \Modules\Folder\Data\CreateFolderData::from([
+                    'parent_id' => $data->parent_id,
+                    'name'      => $folderName,
+                    'owned_by'  => $data->owned_by,
+                ]);
+                $folder = $this->createFolderAction->execute($folderData);
+                $currentParentId = $folder->item_id;
             }
 
-            // Create item for the document
-            $item = $this->createItemAction->execute(
-                CreateItemData::from([
-                    'parent_id' => $data->parent_id,
-                ])
-            );
+            // Now upload each file in the group.
+            foreach ($filesGroup as $fileData) {
+                $uploadedFile = $fileData->file;
 
-            // Store the file with the unique name
-            $filePath = $uploadedFile->storeAs('documents', $newName, 'public');
+                // Generate a unique name within the (possibly new) folder.
+                $originalName = pathinfo($uploadedFile->getClientOriginalName(), PATHINFO_FILENAME);
+                $extension = $uploadedFile->getClientOriginalExtension();
+                $newName = $originalName . '.' . $extension;
+                $counter = 1;
 
-            // Create the document
-            $document = $item->document()->create([
-                'name' => $newName,
-                'owned_by' => $data->owned_by ?? Auth::id(),
-                'mime' => $uploadedFile->getMimeType(),
-                'size' => $uploadedFile->getSize(),
-                'file_path' => $filePath,
-            ]);
+                while (
+                    Document::where('name', $newName)
+                    ->whereHas('item', function ($query) use ($currentParentId) {
+                        $query->where('parent_id', $currentParentId);
+                    })
+                    ->exists()
+                ) {
+                    $counter++;
+                    $newName = $originalName . " ({$counter})." . $extension;
+                }
 
-            // Create the initial version
-            $document->versions()->create([
-                'file_path' => $filePath,
-                'name' => $newName,
-                'current' => true,
-                'mime' => $uploadedFile->getMimeType(),
-                'size' => $uploadedFile->getSize(),
-            ]);
+                // Create an item for the document.
+                $item = $this->createItemAction->execute(
+                    CreateItemData::from([
+                        'parent_id' => $currentParentId,
+                    ])
+                );
 
-            // Log activity
-            activity()
-                ->performedOn($document)
-                ->causedBy(Auth::id())
-                ->log("Document '{$document->name}' uploaded");
+                // Store the file with the unique name.
+                $filePath = $uploadedFile->storeAs('documents', $newName, 'public');
 
-            // Apply numbering scheme and create approval workflow
-            $this->applyDocumentNumberAction->execute($document);
-            $this->createDocumentApprovalFromWorkflowAction->execute($document);
+                // Create the document.
+                $document = $item->document()->create([
+                    'name'     => $newName,
+                    'owned_by' => $data->owned_by ?? Auth::id(),
+                    'mime'     => $uploadedFile->getMimeType(),
+                    'size'     => $uploadedFile->getSize(),
+                    'file_path' => $filePath,
+                ]);
 
-            // Inherit sharing permissions from the parent folder
-            if ($data->parent_id) {
-                // Retrieve the parent item
+                // Create the initial version.
+                $document->versions()->create([
+                    'file_path' => $filePath,
+                    'name'      => $newName,
+                    'current'   => true,
+                    'mime'      => $uploadedFile->getMimeType(),
+                    'size'      => $uploadedFile->getSize(),
+                ]);
+
+                // Log activity.
+                activity()
+                    ->performedOn($document)
+                    ->causedBy(Auth::id())
+                    ->log("Document '{$document->name}' uploaded");
+
+                // Apply numbering scheme and create approval workflow.
+                $this->applyDocumentNumberAction->execute($document);
+                $this->createDocumentApprovalFromWorkflowAction->execute($document);
+
+                // Inherit sharing permissions from the parent folder.
                 $parentItem = $item->parent;
-
                 if ($parentItem && $parentItem->folder) {
-                    // Get the parent folder's sharing settings
                     $parentFolder = $parentItem->folder;
                     $parentShares = $parentFolder->userAccess()->get();
-
-                    // Prepare user attachments for the new document
                     $userAttachments = [];
                     foreach ($parentShares as $share) {
                         $userAttachments[$share->id] = ['role' => $share->pivot->role];
                     }
-
-                    // Attach the same users and roles to the new document
                     if (!empty($userAttachments)) {
                         $document->userAccess()->sync($userAttachments);
                     }
                 }
-            }
 
-            $documents[] = $document;
+                $documents[] = $document;
+            }
         }
 
         return $documents;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { ActionIcon, Button, Group, Menu, Tooltip, rem } from "@mantine/core";
 import {
     IconPlus,
@@ -17,6 +17,7 @@ import {
     IconShare,
     IconDotsVertical,
     IconTrash,
+    IconFolder
 } from "@tabler/icons-react";
 import useModalStore from "@/Modules/Common/Hooks/use-modal-store";
 import { ItemParentResourceData } from "../Types/ItemParentResourceData";
@@ -31,6 +32,8 @@ import ShareModalForm from "@/Modules/Folder/Forms/ShareModalForm";
 import FolderPropertiesModal from "@/Modules/Folder/Forms/FolderPropertiesModal";
 import DeleteFilesForm from "./DeleteFilesForm";
 import { FolderResourceData } from "@/Modules/Folder/Types/FolderResourceData";
+import { useUploadDocument } from "@/Modules/Document/Hooks/use-upload-document";
+import { FileWithPath } from "@mantine/dropzone";
 
 interface IProps {
     uploadFileRef?: React.RefObject<() => void>;
@@ -43,9 +46,16 @@ const ItemToolbar: React.FC<IProps> = ({
     itemParent,
     folderUserRole,
 }) => {
-    const { openModal, modals } = useModalStore();
+    const { openModal } = useModalStore();
     const { generateReport } = useGenerateReport();
     const [isMobile, setIsMobile] = useState(false);
+
+    // New ref for folder upload (selecting whole directories)
+    const uploadFolderRef = useRef<HTMLInputElement>(null);
+
+    // Get the uploadFiles function from your hook.
+    // (Assuming itemParent is defined when toolbar is used.)
+    const { uploadFiles } = useUploadDocument(itemParent!);
 
     useEffect(() => {
         const handleResize = () => {
@@ -57,6 +67,24 @@ const ItemToolbar: React.FC<IProps> = ({
 
         return () => window.removeEventListener("resize", handleResize);
     }, []);
+
+    const handleUploadFolderClick = () => {
+        uploadFolderRef.current?.click();
+    };
+
+    const handleFolderInputChange = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const files = event.target.files;
+        if (files && files.length > 0) {
+            // Convert the FileList to an array and pass it along;
+            // each File carries its webkitRelativePath property.
+            const fileArray = Array.from(files) as FileWithPath[];
+            uploadFiles(fileArray);
+        }
+        // Reset the input value so the same folder can be selected again if needed.
+        event.target.value = "";
+    };
 
     const renderActions = () => (
         <>
@@ -186,108 +214,132 @@ const ItemToolbar: React.FC<IProps> = ({
     );
 
     return (
-        <Group h="50%" px={32} align="center" justify="space-between">
-            {(folderUserRole === "editor" || folderUserRole === "admin") && (
-                <Group gap="xs">
-                    <Menu
-                        shadow="md"
-                        width={220}
-                        transitionProps={{
-                            transition: "pop-top-left",
-                        }}
-                        position="bottom-start"
-                    >
-                        <Menu.Target>
-                            <Button
-                                variant="subtle"
-                                color="dark.3"
-                                leftSection={<IconPlus size={18} />}
-                                rightSection={<IconChevronDown size={12} />}
-                            >
-                                New
-                            </Button>
-                        </Menu.Target>
-
-                        <Menu.Dropdown>
-                            <Menu.Item
-                                leftSection={
-                                    <IconFolderPlus
-                                        style={{
-                                            width: rem(14),
-                                            height: rem(14),
-                                        }}
-                                    />
-                                }
-                                onClick={() => openModal("folder")}
-                            >
-                                New Folder
-                            </Menu.Item>
-                            <Menu.Item
-                                leftSection={
-                                    <IconFileIsr
-                                        style={{
-                                            width: rem(14),
-                                            height: rem(14),
-                                        }}
-                                    />
-                                }
-                                onClick={() => uploadFileRef?.current?.()}
-                            >
-                                Upload Files
-                            </Menu.Item>
-                        </Menu.Dropdown>
-                    </Menu>
-
-                    {isMobile ? (
-                        <Menu shadow="md" width={200}>
-                            <Menu.Target>
-                                <ActionIcon
-                                    variant="transparent"
-                                    color="dark.3"
-                                    size="lg"
-                                >
-                                    <IconDotsVertical size={18} />
-                                </ActionIcon>
-                            </Menu.Target>
-                            <Menu.Dropdown>{renderActions()}</Menu.Dropdown>
-                        </Menu>
-                    ) : (
-                        renderActions()
-                    )}
-                </Group>
-            )}
-
-            {folderUserRole === "viewer" && (
-                <Group gap="xs">
-                    <Tooltip label="Activity" position="bottom" withArrow>
-                        <ActionIcon
-                            component={Link}
-                            size="lg"
-                            href={route("folder.activity-log", {
-                                id: itemParent?.item_id,
-                            })}
-                            variant="transparent"
-                            color="dark.3"
+        <>
+            <Group h="50%" px={32} align="center" justify="space-between">
+                {(folderUserRole === "editor" || folderUserRole === "admin") && (
+                    <Group gap="xs">
+                        <Menu
+                            shadow="md"
+                            width={220}
+                            transitionProps={{
+                                transition: "pop-top-left",
+                            }}
+                            position="bottom-start"
                         >
-                            <IconArticle size={18} />
-                        </ActionIcon>
-                    </Tooltip>
-                </Group>
-            )}
+                            <Menu.Target>
+                                <Button
+                                    variant="subtle"
+                                    color="dark.3"
+                                    leftSection={<IconPlus size={18} />}
+                                    rightSection={<IconChevronDown size={12} />}
+                                >
+                                    New
+                                </Button>
+                            </Menu.Target>
 
-            {/* Forms */}
-            <CreateFolderForm itemParent={itemParent} />
-            <CreateWorkflowForm itemParent={itemParent} />
-            <UpdateWorkflowForm itemParent={itemParent} />
-            <CreateNumberingSchemeForm itemParent={itemParent} />
-            <UpdateNumberingSchemeForm itemParent={itemParent} />
-            <ShareModalForm folderId={itemParent?.item_id ?? ""} />
-            <FolderPropertiesModal itemParent={itemParent} />
-            <DeleteFilesForm
-                selectedIds={[itemParent?.item_id ?? ""]}
-                setSelectedRecord={() => {}}
+                            <Menu.Dropdown>
+                                <Menu.Item
+                                    leftSection={
+                                        <IconFolderPlus
+                                            style={{
+                                                width: rem(14),
+                                                height: rem(14),
+                                            }}
+                                        />
+                                    }
+                                    onClick={() => openModal("folder")}
+                                >
+                                    New Folder
+                                </Menu.Item>
+                                <Menu.Item
+                                    leftSection={
+                                        <IconFileIsr
+                                            style={{
+                                                width: rem(14),
+                                                height: rem(14),
+                                            }}
+                                        />
+                                    }
+                                    onClick={() => uploadFileRef?.current?.()}
+                                >
+                                    Upload Files
+                                </Menu.Item>
+                                <Menu.Item
+                                    leftSection={
+                                        <IconFolder
+                                            style={{
+                                                width: rem(14),
+                                                height: rem(14),
+                                            }}
+                                        />
+                                    }
+                                    onClick={handleUploadFolderClick}
+                                >
+                                    Upload Folder
+                                </Menu.Item>
+                            </Menu.Dropdown>
+                        </Menu>
+
+                        {isMobile ? (
+                            <Menu shadow="md" width={200}>
+                                <Menu.Target>
+                                    <ActionIcon
+                                        variant="transparent"
+                                        color="dark.3"
+                                        size="lg"
+                                    >
+                                        <IconDotsVertical size={18} />
+                                    </ActionIcon>
+                                </Menu.Target>
+                                <Menu.Dropdown>{renderActions()}</Menu.Dropdown>
+                            </Menu>
+                        ) : (
+                            renderActions()
+                        )}
+                    </Group>
+                )}
+
+                {folderUserRole === "viewer" && (
+                    <Group gap="xs">
+                        <Tooltip label="Activity" position="bottom" withArrow>
+                            <ActionIcon
+                                component={Link}
+                                size="lg"
+                                href={route("folder.activity-log", {
+                                    id: itemParent?.item_id,
+                                })}
+                                variant="transparent"
+                                color="dark.3"
+                            >
+                                <IconArticle size={18} />
+                            </ActionIcon>
+                        </Tooltip>
+                    </Group>
+                )}
+
+                {/* Forms */}
+                <CreateFolderForm itemParent={itemParent} />
+                <CreateWorkflowForm itemParent={itemParent} />
+                <UpdateWorkflowForm itemParent={itemParent} />
+                <CreateNumberingSchemeForm itemParent={itemParent} />
+                <UpdateNumberingSchemeForm itemParent={itemParent} />
+                <ShareModalForm folderId={itemParent?.item_id ?? ""} />
+                <FolderPropertiesModal itemParent={itemParent} />
+                <DeleteFilesForm
+                    selectedIds={[itemParent?.item_id ?? ""]}
+                    setSelectedRecord={() => { }}
+                />
+            </Group>
+            {/* Hidden input to allow folder selection */}
+            <input
+                type="file"
+                ref={uploadFolderRef}
+                style={{ display: "none" }}
+                {...{ webkitdirectory: "true" }}
+                multiple
+                onChange={handleFolderInputChange}
             />
-        </Group>
+        </>
     );
 };
 

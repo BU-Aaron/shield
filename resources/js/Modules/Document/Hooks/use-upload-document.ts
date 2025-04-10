@@ -14,7 +14,10 @@ export function useUploadDocument(itemParent: ItemParentResourceData) {
 
     const uploadFiles = (files: FileWithPath[]) => {
         data.parent_id = itemParent.item_id;
-        data.files = files.map((file) => ({ file }));
+        data.files = files.map((file) => ({
+            file,
+            relativePath: file.webkitRelativePath || ""
+        }));
 
         post(route("document.store"), {
             onSuccess: () => {

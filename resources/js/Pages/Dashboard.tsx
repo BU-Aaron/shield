@@ -60,9 +60,8 @@ export default function DashboardPage({ dashboard }: DashboardPageProps) {
                                     </Group>
                                 ),
                             },
-                            { accessor: "review_status", render: ({ review_status, }) => <StateBadge state={review_status} /> },
-                            { accessor: "approval_status", render: ({ approval_status, }) => <StateBadge state={approval_status} /> },
                             { accessor: "date_uploaded", title: "Date Uploaded" },
+                            { accessor: "category", title: "Category" },
                         ]}
                         records={dashboard.recently_uploaded_documents}
                         highlightOnHover

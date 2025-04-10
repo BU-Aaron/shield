@@ -17,7 +17,8 @@ class FileData extends Data
             'image/png',
             'image/jpeg'
         ])]
-        public UploadedFile $file
+        public UploadedFile $file,
+        public ?string $relativePath = '' // Added optional relativePath property
     ) {}
 
     public function getUploadedFile(): UploadedFile
