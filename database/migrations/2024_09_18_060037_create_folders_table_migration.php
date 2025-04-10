@@ -13,6 +13,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->unsignedBigInteger('owned_by');
+            $table->string('category')->nullable();
             $table->softDeletes();
             $table->timestamps();
 

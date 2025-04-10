@@ -35,6 +35,7 @@ class Document extends Model
         'mime',
         'size',
         'file_path',
+        'category',
     ];
 
     protected $casts = [

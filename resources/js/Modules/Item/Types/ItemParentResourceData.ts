@@ -6,6 +6,7 @@ export type ItemParentResourceData = {
     parent_id: string;
     name: string;
     description?: string;
+    category?: string;
     owned_by: string;
     numbering_scheme_id?: number;
     workflow_id?: number;

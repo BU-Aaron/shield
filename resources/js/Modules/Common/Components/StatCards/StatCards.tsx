@@ -1,5 +1,5 @@
 import { Group, Paper, SimpleGrid, Text, Grid, Badge } from "@mantine/core";
-import { IconFile, IconCheck, IconX, IconClock, IconMessage, IconMessageCheck, IconMessageX, IconFileX, IconFileCheck, IconFileDescription } from "@tabler/icons-react";
+import { IconFile, IconCheck, IconX, IconClock, IconMessage, IconMessageCheck, IconMessageX, IconFileX, IconFileCheck, IconFileDescription, IconSearch, IconFingerprint, IconAlertTriangle, IconGavel, IconBadge, IconReport } from "@tabler/icons-react";
 import { DashboardResource } from "@/Modules/Dashboard/Types/DashboardResource";
 import classes from "./StatCards.module.css";
 import { router } from "@inertiajs/react";
@@ -9,12 +9,12 @@ interface StatCardsProps {
 }
 
 const icons = {
-    review_pending: IconMessage,
-    review_accepted: IconMessageCheck,
-    review_rejected: IconMessageX,
-    approval_pending: IconFile,
-    approval_accepted: IconFileCheck,
-    approval_rejected: IconFileX,
+    review_pending: IconSearch,
+    review_accepted: IconFingerprint,
+    review_rejected: IconAlertTriangle,
+    approval_pending: IconGavel,
+    approval_accepted: IconBadge,
+    approval_rejected: IconReport,
     total_documents: IconFileDescription,
 };
 

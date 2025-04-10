@@ -16,11 +16,13 @@ export function useFolderProperties({ itemParent }: UseFolderPropertiesProps) {
         useForm({
             name: itemParent?.name || "",
             description: itemParent?.description || "",
+            category: itemParent?.category || "",
         });
 
     useEffect(() => {
         setData("name", itemParent?.name || "");
         setData("description", itemParent?.description || "");
+        setData("category", itemParent?.category || "");
     }, [itemParent]);
 
     const submit = (e: React.FormEvent) => {

@@ -26,6 +26,7 @@ class Folder extends Model
         'description',
         'owned_by',
         'parent_id', // Add parent_id to allow hierarchical folders
+        'category',
     ];
 
     public function item(): BelongsTo

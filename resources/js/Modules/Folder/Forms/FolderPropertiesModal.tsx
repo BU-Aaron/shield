@@ -6,6 +6,7 @@ import {
     TextInput,
     Text,
     Textarea,
+    Select,
 } from "@mantine/core";
 import React from "react";
 import { useFolderProperties } from "../Hooks/use-folder-properties";
@@ -44,6 +45,22 @@ const FolderPropertiesModal: React.FC<FolderPropertiesModalProps> = ({
                         onChange={(e) => setData("name", e.target.value)}
                         error={errors.name}
                         required
+                    />
+                    <Select
+                        label="Category"
+                        placeholder="Select category"
+                        name="category"
+                        data={[
+                            "INV",
+                            "INQ",
+                            "UI",
+                            "Forensic Reports",
+                            "Finance/Invest",
+                            "Inventory Reports",
+                        ]}
+                        value={data.category ?? ""}
+                        onChange={(value) => setData("category", value || "")}
+                        error={errors.category}
                     />
                     <Textarea
                         label="Notes"

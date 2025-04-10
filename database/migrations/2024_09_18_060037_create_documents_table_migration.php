@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('due_date')->nullable();
             $table->string('file_path');
+            $table->string('category')->nullable();
             $table->timestamps();
             $table->softDeletes();
 

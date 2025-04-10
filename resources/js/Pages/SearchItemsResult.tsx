@@ -2,19 +2,22 @@ import React from 'react';
 import { DataTable } from 'mantine-datatable';
 import { Group, Stack, Text } from '@mantine/core';
 import { IconFolder, IconFile, IconSearchOff } from '@tabler/icons-react';
-import { SearchResults, DocumentSearchResult, FolderSearchResult } from '@/Modules/GlobalSearch/Types/SearchResultTypes';
+import { DocumentSearchResult, FolderSearchResult } from '@/Modules/GlobalSearch/Types/SearchResultTypes';
 import { Authenticated } from '@/Modules/Common/Layouts/AuthenticatedLayout/Authenticated';
-import { useDocumentProperties } from "@/Modules/Item/Hooks/use-document-properties";
-import { ItemIcon } from "@/Modules/Common/Components/ItemIcon/ItemIcon";
+import { useDocumentProperties } from '@/Modules/Item/Hooks/use-document-properties';
+import { router } from '@inertiajs/react';
+import { ItemIcon } from '@/Modules/Common/Components/ItemIcon/ItemIcon';
 
 interface Props {
     documents: DocumentSearchResult[];
+    folders: FolderSearchResult[];
     query: string;
 }
 
-const SearchItemsResult: React.FC<Props> = ({ documents, query }) => {
+const SearchItemsResult: React.FC<Props> = ({ documents, folders, query }) => {
     const combinedResults = [
         ...documents.map(doc => ({ ...doc, type: 'document' as const })),
+        ...folders.map(folder => ({ ...folder, type: 'folder' as const })),
     ];
 
     const { openDocument } = useDocumentProperties();
@@ -30,12 +33,12 @@ const SearchItemsResult: React.FC<Props> = ({ documents, query }) => {
                     <DataTable
                         columns={[
                             {
-                                accessor: "name",
+                                accessor: 'name',
                                 render: ({ mime, type, name, status, missing_required_metadata }) => (
                                     <Group align="center" gap={12}>
                                         <ItemIcon
-                                            mime={mime ?? ""}
-                                            isFolder={false}  // TODO: should check if the item is a folder or document
+                                            mime={mime ?? ''}
+                                            isFolder={type === 'folder'}
                                             approvalStatus={status}
                                             missingRequiredMetadata={missing_required_metadata}
                                         />
@@ -50,10 +53,14 @@ const SearchItemsResult: React.FC<Props> = ({ documents, query }) => {
                         verticalSpacing="lg"
                         horizontalSpacing="xl"
                         textSelectionDisabled
-                        customRowAttributes={({ type, id }) => ({
+                        customRowAttributes={(row: any) => ({
                             onDoubleClick: (e: MouseEvent) => {
                                 if (e.button === 0) {
-                                    openDocument(id);
+                                    if (row.type === 'document') {
+                                        openDocument(row.id);
+                                    } else if (row.type === 'folder') {
+                                        router.visit(row.url);
+                                    }
                                 }
                             },
                         })}
@@ -66,8 +73,6 @@ const SearchItemsResult: React.FC<Props> = ({ documents, query }) => {
                         </Text>
                     </Stack>
                 )}
-
-
             </Stack>
         </Authenticated>
     );

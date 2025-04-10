@@ -43,7 +43,7 @@ interface MetadataFilter {
 interface DashboardReportProps {
     documents: PaginationData<ItemContentsResourceData>;
     filters: {
-        document_status: string | null;
+        category: string | null;
         start_date: string | null;
         end_date: string | null;
         metadata_filters: MetadataFilter[];
@@ -63,7 +63,7 @@ const DashboardReportPage: React.FC<DashboardReportProps> = ({
     users,
 }) => {
     const [documentStatus, setDocumentStatus] = useState<string | null>(
-        filters.document_status
+        filters.category
     );
     const [startDate, setStartDate] = useState<Date | null>(
         filters.start_date ? new Date(filters.start_date) : null
@@ -96,7 +96,7 @@ const DashboardReportPage: React.FC<DashboardReportProps> = ({
      */
     const handleFilter = (
         updatedFilters: Partial<{
-            document_status: string | null;
+            category: string | null;
             start_date: string | null;
             end_date: string | null;
             uploader: string | null;
@@ -111,30 +111,30 @@ const DashboardReportPage: React.FC<DashboardReportProps> = ({
         }>
     ) => {
         const query: any = {
-            document_status:
-                updatedFilters.document_status !== undefined
-                    ? updatedFilters.document_status
+            category:
+                updatedFilters.category !== undefined
+                    ? updatedFilters.category
                     : documentStatus,
             start_date:
                 updatedFilters.start_date !== undefined
                     ? updatedFilters.start_date
                         ? new Date(
-                              updatedFilters.start_date
-                          ).toLocaleDateString("en-CA")
+                            updatedFilters.start_date
+                        ).toLocaleDateString("en-CA")
                         : null
                     : startDate
-                    ? startDate.toLocaleDateString("en-CA")
-                    : null,
+                        ? startDate.toLocaleDateString("en-CA")
+                        : null,
             end_date:
                 updatedFilters.end_date !== undefined
                     ? updatedFilters.end_date
                         ? new Date(updatedFilters.end_date).toLocaleDateString(
-                              "en-CA"
-                          )
+                            "en-CA"
+                        )
                         : null
                     : endDate
-                    ? endDate.toLocaleDateString("en-CA")
-                    : null,
+                        ? endDate.toLocaleDateString("en-CA")
+                        : null,
             uploader:
                 updatedFilters.uploader !== undefined
                     ? updatedFilters.uploader
@@ -151,8 +151,8 @@ const DashboardReportPage: React.FC<DashboardReportProps> = ({
                         ? updatedFilters.metadata_filters
                         : undefined
                     : metadataFilters.length > 0
-                    ? metadataFilters
-                    : undefined,
+                        ? metadataFilters
+                        : undefined,
         };
 
         // Remove null or undefined query parameters
@@ -175,7 +175,7 @@ const DashboardReportPage: React.FC<DashboardReportProps> = ({
 
     const handleDocumentStatusChange = (value: string | null) => {
         setDocumentStatus(value);
-        handleFilter({ document_status: value, page: 1 }); // Reset to first page on filter change
+        handleFilter({ category: value, page: 1 }); // Reset to first page on filter change
     };
 
     const handleStartDateChange = (date: Date | null) => {
@@ -211,7 +211,7 @@ const DashboardReportPage: React.FC<DashboardReportProps> = ({
 
     const handleGenerateReport = () => {
         const payload = {
-            document_status: documentStatus,
+            category: documentStatus,
             start_date: startDate
                 ? startDate.toLocaleDateString("en-CA")
                 : null,
@@ -237,7 +237,7 @@ const DashboardReportPage: React.FC<DashboardReportProps> = ({
         setSearch("");
         setMetadataFilters([]);
         handleFilter({
-            document_status: null,
+            category: null,
             start_date: null,
             end_date: null,
             uploader: null,
@@ -296,27 +296,27 @@ const DashboardReportPage: React.FC<DashboardReportProps> = ({
                                 onChange={handleDocumentStatusChange}
                                 data={[
                                     {
-                                        value: "reviewal_accepted",
+                                        value: "INV",
                                         label: "INV",
                                     },
                                     {
-                                        value: "reviewal_rejected",
+                                        value: "INQ",
                                         label: "INQ",
                                     },
                                     {
-                                        value: "reviewal_pending",
+                                        value: "UI",
                                         label: "UI",
                                     },
                                     {
-                                        value: "approval_accepted",
+                                        value: "Forensic Reports",
                                         label: "Forensic Reports",
                                     },
                                     {
-                                        value: "approval_rejected",
+                                        value: "Finance/Invest",
                                         label: "Finance/Invest",
                                     },
                                     {
-                                        value: "approval_pending",
+                                        value: "Inventory Reports",
                                         label: "Inventory Reports",
                                     },
                                 ]}

@@ -36,66 +36,43 @@ class DashboardController extends Controller
         $user = User::find($user->id);
         $this->dashboardAuthorization->isAdmin($user);
 
-        // Define the statuses to count
-        $reviewStatuses = [
-            'reviewal_pending',
-            'reviewal_accepted',
-            'reviewal_rejected',
+        // Define document categories to count
+        $categories = [
+            'INV',              // will be used for the "INV" card
+            'INQ',              // will be used for the "INQ" card
+            'UI',               // will be used for the "UI" card
+            'Forensic Reports', // will be used for the "Forensic Reports" card
+            'Finance/Invest',   // will be used for the "Finance/Invest" card
+            'Inventory Reports' // will be used for the "Inventory Reports" card
         ];
 
-        $approvalStatuses = [
-            'approval_pending',
-            'approval_accepted',
-            'approval_rejected',
-        ];
-
-        // Initialize arrays to hold counts
-        $reviewStatusCounts = [];
-        $approvalStatusCounts = [];
-
-        // Count review statuses
-        foreach ($reviewStatuses as $statusKey) {
-            $statusClass = DocumentStatusHelper::getStatusClass($statusKey);
-            if ($statusClass) {
-                $count = Document::where('review_status', $statusClass)
-                    ->whereHas('item', function ($query) use ($user) {
-                        if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
-                            $query->where(function ($q) use ($user) {
-                                $q->whereHas('document.userAccess', function ($q2) use ($user) {
-                                    $q2->where('user_id', $user->id);
-                                });
+        $counts = [];
+        foreach ($categories as $category) {
+            $counts[$category] = Document::where('category', $category)
+                ->whereHas('item', function ($query) use ($user) {
+                    if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
+                        $query->where(function ($q) use ($user) {
+                            $q->whereHas('document.userAccess', function ($q2) use ($user) {
+                                $q2->where('user_id', $user->id);
                             });
-                        }
-                    })
-                    ->count();
-                $reviewStatusCounts[$statusKey] = $count;
-            } else {
-                $reviewStatusCounts[$statusKey] = 0;
-            }
+                        });
+                    }
+                })
+                ->count();
         }
 
-        // Count approval statuses
-        foreach ($approvalStatuses as $statusKey) {
-            $statusClass = DocumentStatusHelper::getStatusClass($statusKey);
-            if ($statusClass) {
-                $count = Document::where('approval_status', $statusClass)
-                    ->whereHas('item', function ($query) use ($user) {
-                        if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
-                            $query->where(function ($q) use ($user) {
-                                $q->whereHas('document.userAccess', function ($q2) use ($user) {
-                                    $q2->where('user_id', $user->id);
-                                });
-                            });
-                        }
-                    })
-                    ->count();
-                $approvalStatusCounts[$statusKey] = $count;
-            } else {
-                $approvalStatusCounts[$statusKey] = 0;
+        // Count total documents
+        $totalDocuments = Document::whereHas('item', function ($query) use ($user) {
+            if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
+                $query->where(function ($q) use ($user) {
+                    $q->whereHas('document.userAccess', function ($q2) use ($user) {
+                        $q2->where('user_id', $user->id);
+                    });
+                });
             }
-        }
+        })->count();
 
-        // Fetch recently uploaded documents, ensuring associated Items are not soft-deleted and user has access
+        // Fetch recently uploaded documents, now using the category field only
         $recently_uploaded_documents = Document::whereHas('item', function ($query) use ($user) {
             if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
                 $query->where(function ($q) use ($user) {
@@ -112,32 +89,31 @@ class DashboardController extends Controller
                 return new RecentlyUploadedDocumentResource(
                     id: $doc->item_id,
                     name: $doc->name,
-                    review_status: $doc->review_status ? $doc->review_status->label() : null,
-                    approval_status: $doc->approval_status ? $doc->approval_status->label() : null,
+                    category: $doc->category,
                     date_uploaded: $doc->updated_at,
-                    mime: $doc->mime
+                    mime: $doc->mime,
+                    review_status: '',
+                    approval_status: ''
                 );
             })
             ->toArray();
 
-        // Create DashboardResource instance
+        // Create DashboardResource instance.
+        // We repurpose the old fields as follows:
+        //   • number_of_review_pending  => count for "INQ"
+        //   • number_of_review_accepted => count for "INV"
+        //   • number_of_review_rejected => count for "UI"
+        //   • number_of_approval_accepted => count for "Forensic Reports"
+        //   • number_of_approval_pending => count for "Finance/Invest"
+        //   • number_of_approval_rejected => count for "Inventory Reports"
         $dashboardData = new DashboardResource(
-            number_of_review_pending: $reviewStatusCounts['reviewal_pending'],
-            number_of_review_accepted: $reviewStatusCounts['reviewal_accepted'],
-            number_of_review_rejected: $reviewStatusCounts['reviewal_rejected'],
-            number_of_approval_pending: $approvalStatusCounts['approval_pending'],
-            number_of_approval_accepted: $approvalStatusCounts['approval_accepted'],
-            number_of_approval_rejected: $approvalStatusCounts['approval_rejected'],
-            number_of_documents: Document::whereHas('item', function ($query) use ($user) {
-                if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
-                    $query->where(function ($q) use ($user) {
-                        $q->whereHas('document.userAccess', function ($q2) use ($user) {
-                            $q2->where('user_id', $user->id);
-                        });
-                    });
-                }
-            })
-                ->count(),
+            number_of_review_pending: $counts['INQ'],
+            number_of_review_accepted: $counts['INV'],
+            number_of_review_rejected: $counts['UI'],
+            number_of_approval_pending: $counts['Finance/Invest'],
+            number_of_approval_accepted: $counts['Forensic Reports'],
+            number_of_approval_rejected: $counts['Inventory Reports'],
+            number_of_documents: $totalDocuments,
             recently_uploaded_documents: $recently_uploaded_documents
         );
 
@@ -206,28 +182,41 @@ class DashboardController extends Controller
             ->whereNull('deleted_at'); // Ensure Item is not soft-deleted
 
         // Apply document status filter
-        if ($documentStatus) {
-            $statusClass = DocumentStatusHelper::getStatusClass($documentStatus);
-            if ($statusClass) {
-                $documentsQuery->whereHas('document', function ($query) use ($statusClass, $user) {
-                    if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
-                        $query->where(function ($q) use ($statusClass, $user) {
-                            $q->where('review_status', $statusClass)
-                                ->orWhere('approval_status', $statusClass)
-                                ->where(function ($q2) use ($user) {
-                                    $q2->whereHas('userAccess', function ($q3) use ($user) {
-                                        $q3->where('user_id', $user->id);
-                                    });
-                                });
-                        });
-                    } else {
-                        $query->where(function ($q) use ($statusClass) {
-                            $q->where('review_status', $statusClass)
-                                ->orWhere('approval_status', $statusClass);
-                        });
-                    }
-                });
-            }
+        // if ($documentStatus) {
+        //     $statusClass = DocumentStatusHelper::getStatusClass($documentStatus);
+        //     if ($statusClass) {
+        //         $documentsQuery->whereHas('document', function ($query) use ($statusClass, $user) {
+        //             if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
+        //                 $query->where(function ($q) use ($statusClass, $user) {
+        //                     $q->where('review_status', $statusClass)
+        //                         ->orWhere('approval_status', $statusClass)
+        //                         ->where(function ($q2) use ($user) {
+        //                             $q2->whereHas('userAccess', function ($q3) use ($user) {
+        //                                 $q3->where('user_id', $user->id);
+        //                             });
+        //                         });
+        //                 });
+        //             } else {
+        //                 $query->where(function ($q) use ($statusClass) {
+        //                     $q->where('review_status', $statusClass)
+        //                         ->orWhere('approval_status', $statusClass);
+        //                 });
+        //             }
+        //         });
+        //     }
+        // }
+
+        $category = $request->query('category');
+        if ($category) {
+            $documentsQuery->whereHas('document', function ($query) use ($category, $user) {
+                $query->where('category', $category);
+                // If you need to restrict based on user roles:
+                if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
+                    $query->whereHas('userAccess', function ($q) use ($user) {
+                        $q->where('user_id', $user->id);
+                    });
+                }
+            });
         }
 
         // Apply uploader filter
