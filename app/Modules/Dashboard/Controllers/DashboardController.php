@@ -141,20 +141,17 @@ class DashboardController extends Controller
         $this->dashboardAuthorization->isAdmin($user);
 
         // Extract filters from query parameters
-        $documentStatus = $request->query('document_status'); // e.g., reviewal_pending, approval_accepted, etc.
+        $category = $request->query('category'); // category filter value (e.g. INV, INQ, etc.)
         $startDate = $request->query('start_date');
         $endDate = $request->query('end_date');
         $uploader = $request->query('uploader');
         $dueIn = $request->query('due_in');
-        $metadataFilters = $request->query('metadata_filters', []); // Retrieve metadata_filters
+        $metadataFilters = $request->query('metadata_filters', []);
 
         // Reconstruct metadataFilters if they are in a flat structure
         if ($this->isFlatMetadataFilters($metadataFilters)) {
             $metadataFilters = $this->groupMetadataFilters($metadataFilters);
         }
-
-        // Logging for debugging
-        // dd($metadataFilters);
 
         // Get selected metadata columns from the dashboard_report_metadata_columns table
         $selectedMetadataIds = DB::table('dashboard_report_metadata_columns')->pluck('metadata_id')->toArray();
@@ -168,102 +165,97 @@ class DashboardController extends Controller
             ? User::select('id', 'name')->get()
             : collect([]);
 
-        // Initialize the query for documents
-        $documentsQuery = Item::with('document.metadata') // Ensure metadata is loaded
-            ->whereHas('document', function ($query) use ($user) {
-                if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
-                    $query->where(function ($q) use ($user) {
-                        $q->whereHas('userAccess', function ($q2) use ($user) {
-                            $q2->where('user_id', $user->id);
-                        });
-                    });
-                }
-            })
-            ->whereNull('deleted_at'); // Ensure Item is not soft-deleted
+        // Initialize the query (starting with all items that are not soft-deleted)
+        $itemsQuery = Item::with('document.metadata')->whereNull('deleted_at');
 
-        // Apply document status filter
-        // if ($documentStatus) {
-        //     $statusClass = DocumentStatusHelper::getStatusClass($documentStatus);
-        //     if ($statusClass) {
-        //         $documentsQuery->whereHas('document', function ($query) use ($statusClass, $user) {
-        //             if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
-        //                 $query->where(function ($q) use ($statusClass, $user) {
-        //                     $q->where('review_status', $statusClass)
-        //                         ->orWhere('approval_status', $statusClass)
-        //                         ->where(function ($q2) use ($user) {
-        //                             $q2->whereHas('userAccess', function ($q3) use ($user) {
-        //                                 $q3->where('user_id', $user->id);
-        //                             });
-        //                         });
-        //                 });
-        //             } else {
-        //                 $query->where(function ($q) use ($statusClass) {
-        //                     $q->where('review_status', $statusClass)
-        //                         ->orWhere('approval_status', $statusClass);
-        //                 });
-        //             }
-        //         });
-        //     }
-        // }
+        // For non-admin and non-viewer users, restrict document items by user access while still allowing folders.
+        if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
+            $itemsQuery->where(function ($q) use ($user) {
+                $q->whereHas('document.userAccess', function ($q2) use ($user) {
+                    $q2->where('user_id', $user->id);
+                })
+                    ->orWhere('type', 'folder');
+            });
+        }
 
-        $category = $request->query('category');
+        // Filter by category (apply to both document items and folders)
         if ($category) {
-            $documentsQuery->whereHas('document', function ($query) use ($category, $user) {
-                $query->where('category', $category);
-                // If you need to restrict based on user roles:
-                if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
-                    $query->whereHas('userAccess', function ($q) use ($user) {
-                        $q->where('user_id', $user->id);
-                    });
-                }
-            });
-        }
-
-        // Apply uploader filter
-        if ($uploader) {
-            $documentsQuery->whereHas('document', function ($query) use ($uploader, $user) {
-                $query->where('owned_by', $uploader);
-                if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
-                    $query->where(function ($q) use ($user) {
-                        $q->whereHas('userAccess', function ($q2) use ($user) {
+            $itemsQuery->where(function ($q) use ($category, $user) {
+                $q->whereHas('document', function ($qDoc) use ($category, $user) {
+                    $qDoc->where('category', $category);
+                    if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
+                        $qDoc->whereHas('userAccess', function ($q2) use ($user) {
                             $q2->where('user_id', $user->id);
                         });
+                    }
+                })
+                    ->orWhere(function ($qFolder) use ($category) {
+                        $qFolder->where('type', 'folder')
+                            // Use the folder relationship to get the category
+                            ->whereHas('folder', function ($q) use ($category) {
+                                $q->where('category', $category);
+                            });
                     });
-                }
             });
         }
 
-        // Apply due_in filter
+        // Filter by uploader (apply to both documents and folders if applicable)
+        if ($uploader) {
+            $itemsQuery->where(function ($q) use ($uploader, $user) {
+                $q->whereHas('document', function ($qDoc) use ($uploader, $user) {
+                    $qDoc->where('owned_by', $uploader);
+                    if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
+                        $qDoc->whereHas('userAccess', function ($q2) use ($user) {
+                            $q2->where('user_id', $user->id);
+                        });
+                    }
+                })
+                    ->orWhere(function ($qFolder) use ($uploader) {
+                        $qFolder->where('type', 'folder')
+                            ->where('owned_by', $uploader);
+                    });
+            });
+        }
+
+        // Filter by "due in" (check due_date of document items or folder items)
         if ($dueIn) {
             $dueDays = intval($dueIn);
             $currentDate = now();
-            $documentsQuery->whereHas('document', function ($query) use ($dueDays, $currentDate, $user) {
-                $query->whereDate('due_date', '<=', $currentDate->copy()->addDays($dueDays));
-                if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
-                    $query->where(function ($q) use ($user) {
-                        $q->whereHas('userAccess', function ($q2) use ($user) {
+            $itemsQuery->where(function ($q) use ($dueDays, $currentDate, $user) {
+                $q->whereHas('document', function ($qDoc) use ($dueDays, $currentDate, $user) {
+                    $qDoc->whereDate('due_date', '<=', $currentDate->copy()->addDays($dueDays));
+                    if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
+                        $qDoc->whereHas('userAccess', function ($q2) use ($user) {
                             $q2->where('user_id', $user->id);
                         });
+                    }
+                })
+                    ->orWhere(function ($qFolder) use ($dueDays, $currentDate) {
+                        $qFolder->where('type', 'folder')
+                            ->whereDate('due_date', '<=', $currentDate->copy()->addDays($dueDays));
                     });
-                }
             });
         }
 
-        // Apply date range filter
+        // Filter by date range (using updated_at from documents or folders)
         if ($startDate && $endDate) {
-            $documentsQuery->whereHas('document', function ($query) use ($startDate, $endDate, $user) {
-                $query->whereBetween('updated_at', [$startDate, $endDate]);
-                if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
-                    $query->where(function ($q) use ($user) {
-                        $q->whereHas('userAccess', function ($q2) use ($user) {
+            $itemsQuery->where(function ($q) use ($startDate, $endDate, $user) {
+                $q->whereHas('document', function ($qDoc) use ($startDate, $endDate, $user) {
+                    $qDoc->whereBetween('updated_at', [$startDate, $endDate]);
+                    if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
+                        $qDoc->whereHas('userAccess', function ($q2) use ($user) {
                             $q2->where('user_id', $user->id);
                         });
+                    }
+                })
+                    ->orWhere(function ($qFolder) use ($startDate, $endDate) {
+                        $qFolder->where('type', 'folder')
+                            ->whereBetween('updated_at', [$startDate, $endDate]);
                     });
-                }
             });
         }
 
-        // Apply metadata filters
+        // Apply metadata filters (only relevant for items that have a document relation)
         if (!empty($metadataFilters)) {
             foreach ($metadataFilters as $filter) {
                 $field = $filter['field'] ?? null;
@@ -271,7 +263,7 @@ class DashboardController extends Controller
                 $value = $filter['value'] ?? null;
 
                 if ($field && $operator && $value) {
-                    $documentsQuery->whereHas('document.metadata', function ($query) use ($field, $operator, $value) {
+                    $itemsQuery->whereHas('document.metadata', function ($query) use ($field, $operator, $value) {
                         switch ($operator) {
                             case 'includes':
                                 $query->where('name', $field)
@@ -298,24 +290,26 @@ class DashboardController extends Controller
             }
         }
 
-        // Paginate results
-        $documents = $documentsQuery->paginate(15)->withQueryString();
+        // Paginate the results
+        $documents = $itemsQuery->paginate(15)->withQueryString();
 
-        // Pass data to Inertia
+        // Pass data to Inertia.
+        // Note that we now pass the 'category' filter so the frontend (DashboardReport.tsx)
+        // can initialize its state from filters.category.
         return Inertia::render('DashboardReport', [
             'documents' => ItemContentsResourceData::collect($documents),
             'filters' => [
-                'document_status' => $documentStatus,
-                'start_date' => $startDate,
-                'end_date' => $endDate,
-                'uploader' => $uploader,
-                'due_in' => $dueIn,
-                'metadata_filters' => $metadataFilters, // Include metadata_filters
+                'category'         => $category,
+                'start_date'       => $startDate,
+                'end_date'         => $endDate,
+                'uploader'         => $uploader,
+                'due_in'           => $dueIn,
+                'metadata_filters' => $metadataFilters,
             ],
-            'selectedMetadata' => DashboardMetadataResourceData::collect($selectedMetadata),
-            'availableMetadata' => DashboardMetadataResourceData::collect($availableMetadata),
+            'selectedMetadata'   => DashboardMetadataResourceData::collect($selectedMetadata),
+            'availableMetadata'  => DashboardMetadataResourceData::collect($availableMetadata),
             'existingMetadataIds' => $selectedMetadataIds,
-            'users' => $users, // Pass users to the frontend
+            'users'              => $users,
         ]);
     }
 

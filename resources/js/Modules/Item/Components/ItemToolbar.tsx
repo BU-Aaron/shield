@@ -99,7 +99,7 @@ const ItemToolbar: React.FC<IProps> = ({
                 </ActionIcon>
             </Tooltip>
 
-            <Tooltip label="Workflow" position="bottom" withArrow>
+            {/* <Tooltip label="Workflow" position="bottom" withArrow>
                 <ActionIcon
                     variant="transparent"
                     size="lg"
@@ -114,7 +114,7 @@ const ItemToolbar: React.FC<IProps> = ({
                 >
                     <IconGitBranch size={18} />
                 </ActionIcon>
-            </Tooltip>
+            </Tooltip> */}
 
             <Tooltip label="Share" position="bottom" withArrow>
                 <ActionIcon
