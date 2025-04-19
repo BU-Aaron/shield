@@ -27,17 +27,17 @@ export default function LoginForm() {
 
                 <Stack gap={24}>
                     <TextInput
-                        id="email"
-                        type="email"
-                        name="email"
-                        value={data.email}
+                        id="username"
+                        type="text"
+                        name="username"
+                        value={data.username}
                         autoComplete="username"
                         leftSectionPointerEvents="none"
-                        placeholder="Email address"
+                        placeholder="Username"
                         leftSection={<IconUser size={20} />}
                         size="md"
-                        onChange={(e) => setData("email", e.target.value)}
-                        error={errors.email}
+                        onChange={(e) => setData("username", e.target.value)}
+                        error={errors.username}
                     />
 
                     <PasswordInput

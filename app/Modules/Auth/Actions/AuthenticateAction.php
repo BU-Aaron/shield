@@ -18,17 +18,17 @@ class AuthenticateAction
      */
     public function execute(LoginData $data): void
     {
-        $this->ensureIsNotRateLimited($data->email);
+        $this->ensureIsNotRateLimited($data->username);
 
-        if (! Auth::attempt(['email' => $data->email, 'password' => $data->password], $data->remember)) {
-            RateLimiter::hit($this->throttleKey($data->email));
+        if (! Auth::attempt(['username' => $data->username, 'password' => $data->password], $data->remember)) {
+            RateLimiter::hit($this->throttleKey($data->username));
 
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'username' => trans('auth.failed'),
             ]);
         }
 
-        RateLimiter::clear($this->throttleKey($data->email));
+        RateLimiter::clear($this->throttleKey($data->username));
     }
 
     /**
@@ -36,18 +36,18 @@ class AuthenticateAction
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    protected function ensureIsNotRateLimited(string $email): void
+    protected function ensureIsNotRateLimited(string $username): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey($email), 5)) {
+        if (! RateLimiter::tooManyAttempts($this->throttleKey($username), 5)) {
             return;
         }
 
         event(new Lockout(request()));
 
-        $seconds = RateLimiter::availableIn($this->throttleKey($email));
+        $seconds = RateLimiter::availableIn($this->throttleKey($username));
 
         throw ValidationException::withMessages([
-            'email' => trans('auth.throttle', [
+            'username' => trans('auth.throttle', [
                 'seconds' => $seconds,
                 'minutes' => ceil($seconds / 60),
             ]),
@@ -57,8 +57,8 @@ class AuthenticateAction
     /**
      * Get the rate limiting throttle key for the request.
      */
-    protected function throttleKey(string $email): string
+    protected function throttleKey(string $username): string
     {
-        return Str::transliterate(Str::lower($email) . '|' . request()->ip());
+        return Str::transliterate(Str::lower($username) . '|' . request()->ip());
     }
 }

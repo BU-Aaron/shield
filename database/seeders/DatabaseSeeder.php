@@ -21,63 +21,17 @@ class DatabaseSeeder extends Seeder
             RolePermissionSeeder::class,
         ]);
 
-        //TODO: workflow roles have unassigned, reviewer, approver
-
-        // Developer
         $testUser1 = User::create([
-            'name' => 'John Alfred Alfonso',
-            'email' => 'johnalfredalfonso12@gmail.com',
+            'name' => 'Admin',
+            'email' => 'admin@email.com',
+            'username' => 'admin',
             'password' => '12345678',
             'office_position' => 'Admin Staff',
             'workflow_role' => 'reviewer',
             'system_role' => 'admin',
         ]);
 
-        // Director
-        $testUser2 = User::create([
-            'name' => 'Angelo Alteza',
-            'email' => 'emmanuelangelocanares.alteza@bicol-u.edu.ph',
-            'password' => '12345678',
-            'office_position' => 'Director',
-            'workflow_role' => 'approver',
-            'system_role' => 'viewer',
-        ]);
-
-        // Admin Staff
-        $testUser3 = User::create([
-            'name' => 'Mark Elthon Jay Omanga',
-            'email' => 'markelthonjaymanoza.omanga@bicol-u.edu.ph',
-            'password' => '12345678',
-            'office_position' => 'Admin Staff',
-            'workflow_role' => 'unassigned',
-            'system_role' => 'viewer',
-        ]);
-
-        // Coordinator
-        $testUser4 = User::create([
-            'name' => 'Geryme Mendez',
-            'email' => 'gerymeacuna.mendez@bicol-u.edu.ph',
-            'password' => '12345678',
-            'office_position' => 'Coordinator',
-            'workflow_role' => 'reviewer',
-            'system_role' => 'none',
-        ]);
-
-        // Coordinator
-        $testUser5 = User::create([
-            'name' => 'John Carlo Abillano',
-            'email' => 'johncarlobutlig.abillano@bicol-u.edu.ph',
-            'password' => '12345678',
-            'office_position' => 'Coordinator',
-            'workflow_role' => 'reviewer',
-            'system_role' => 'viewer',
-        ]);
-
         $testUser1->assignRole('admin');
-        $testUser2->assignRole('viewer');
-        $testUser3->assignRole('viewer');
-        $testUser4->assignRole('none');
-        $testUser5->assignRole('viewer');
 
         // Create System Metadata
         Metadata::create([
@@ -116,12 +70,6 @@ class DatabaseSeeder extends Seeder
             'type' => 'Number',
             'status' => 'custom',
         ]);
-
-        // Metadata::create([
-        //     'name' => 'Is Confidential',
-        //     'type' => 'boolean',
-        //     'status' => 'custom',
-        // ]);
 
         Metadata::create([
             'name' => 'Subject',

@@ -4,7 +4,7 @@ import { LoginData } from "../Types/LoginData";
 
 export function useLoginForm() {
     const { data, setData, post, processing, errors, reset } = useForm<LoginData>({
-        email: "",
+        username: "",
         password: "",
         remember: false,
     });
