@@ -323,45 +323,6 @@ const DashboardReportPage: React.FC<DashboardReportProps> = ({
                                 style={{ width: 200 }}
                             />
 
-                            <Select
-                                placeholder="Select uploader"
-                                value={uploader}
-                                onChange={handleUploaderChange}
-                                data={users.map((user) => ({
-                                    value: user.id.toString(),
-                                    label: user.name,
-                                }))}
-                                style={{ width: 200 }}
-                            />
-
-                            <Select
-                                placeholder="Select due in"
-                                value={dueIn}
-                                onChange={handleDueInChange}
-                                data={[
-                                    { value: "7", label: "Due in 7 days" },
-                                    { value: "30", label: "Due in 30 days" },
-                                    { value: "60", label: "Due in 60 days" },
-                                ]}
-                                style={{ width: 200 }}
-                            />
-
-                            <DatePickerInput
-                                placeholder="Start Date"
-                                value={startDate}
-                                onChange={handleStartDateChange}
-                                style={{ width: 200 }}
-                                required
-                            />
-
-                            <DatePickerInput
-                                placeholder="End Date"
-                                value={endDate}
-                                onChange={handleEndDateChange}
-                                style={{ width: 200 }}
-                                required
-                            />
-
                             <Button
                                 onClick={() =>
                                     openModal("selectDashboardMetadataColumns")
@@ -442,7 +403,7 @@ const DashboardReportPage: React.FC<DashboardReportProps> = ({
                                 ),
                             },
                             { accessor: "updated_at", title: "Last Modified" },
-                            { accessor: "due_in", title: "Due In" },
+                            
                             // Dynamic columns including metadata fields
                             ...renderDynamicColumns(),
                         ]}

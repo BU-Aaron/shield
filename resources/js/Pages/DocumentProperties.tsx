@@ -77,7 +77,7 @@ const DocumentPropertiesPage: React.FC<IProps> = ({
     // Combine default metadata with custom metadata
     const defaultMetadata = [
         { name: "Date", value: document.created_at },
-        { name: "Document Number", value: document.document_number },
+        {/*{ name: "Document Number", value: document.document_number },*/}
     ];
 
     const combinedMetadata = [
@@ -153,7 +153,7 @@ const DocumentPropertiesPage: React.FC<IProps> = ({
                             {!isArchived && document.versions.length > 0 && (
                                 <>
                                     <Text size="sm" fw="bold">
-                                        Document Versions
+                                        Document Details
                                     </Text>
                                     <DocumentVersionsDataTable
                                         versions={document.versions}

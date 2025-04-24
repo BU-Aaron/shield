@@ -159,7 +159,7 @@ const ItemToolbar: React.FC<IProps> = ({
                 </ActionIcon>
             </Tooltip>
 
-            <Tooltip label="Numbering" position="bottom" withArrow>
+            {/*<Tooltip label="Numbering" position="bottom" withArrow>
                 <ActionIcon
                     size="lg"
                     variant="transparent"
@@ -176,7 +176,7 @@ const ItemToolbar: React.FC<IProps> = ({
                 >
                     <IconListTree size={18} />
                 </ActionIcon>
-            </Tooltip>
+            </Tooltip>*/}
 
             <Tooltip label="Column" position="bottom" withArrow>
                 <ActionIcon
