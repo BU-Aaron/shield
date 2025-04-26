@@ -354,16 +354,6 @@ const DashboardReportPage: React.FC<DashboardReportProps> = ({
                             >
                                 Clear Filters
                             </Button>
-
-                            {/* Generate Report Button */}
-                            <Button
-                                onClick={handleGenerateReport}
-                                leftSection={<IconDownload size={16} />}
-                                color="blue"
-                                variant="subtle"
-                            >
-                                Generate Report
-                            </Button>
                         </Flex>
                     </Group>
 
