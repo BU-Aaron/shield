@@ -10,6 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Modules\Auth\Models\SecurityQuestion;
 
 class User extends Authenticatable
 {
@@ -55,6 +56,11 @@ class User extends Authenticatable
     public function documentApprovalUsers()
     {
         return $this->hasMany(DocumentApprovalHasUser::class, 'user_id', 'id');
+    }
+
+    public function securityQuestion()
+    {
+        return $this->belongsTo(SecurityQuestion::class, 'security_question_id');
     }
 
     protected static function newFactory()

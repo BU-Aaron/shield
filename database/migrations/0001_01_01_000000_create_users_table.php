@@ -21,6 +21,11 @@ return new class extends Migration
             $table->string('office_position')->nullable();
             $table->string('workflow_role')->nullable();
             $table->string('system_role')->nullable();
+            $table->unsignedBigInteger('security_question_id')->nullable();
+            $table->string('security_question_answer')->nullable();
+            $table->foreign('security_question_id')
+                ->references('id')->on('security_questions')
+                ->onDelete('set null');
             $table->rememberToken();
             $table->timestamps();
         });

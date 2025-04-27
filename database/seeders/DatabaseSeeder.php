@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Modules\User\Models\User;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 use Modules\Workspace\Actions\CreateWorkspaceAction;
 use Modules\Workspace\Data\CreateWorkspaceData;
 use Modules\Folder\Actions\CreateFolderAction;
@@ -19,16 +20,19 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             RolePermissionSeeder::class,
+            SecurityQuestionSeeder::class,
         ]);
 
         $testUser1 = User::create([
             'name' => 'Admin',
             'email' => 'admin@email.com',
             'username' => 'admin',
-            'password' => '12345678',
+            'password' => Hash::make('12345678'),
             'office_position' => 'Admin Staff',
             'workflow_role' => 'reviewer',
             'system_role' => 'admin',
+            'security_question_id' => 1,
+            'security_question_answer' => Hash::make('wasabi'),
         ]);
 
         $testUser1->assignRole('admin');
