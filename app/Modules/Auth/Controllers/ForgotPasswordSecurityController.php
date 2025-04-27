@@ -46,6 +46,9 @@ class ForgotPasswordSecurityController extends Controller
     // Show the form to answer the security question
     public function showSecurityQuestionForm(Request $request)
     {
+        if (!session('password_reset_username')) {
+            return redirect()->route('password.username');
+        }
         // Retrieve all available security questions (adjust fields as needed)
         $questions = SecurityQuestion::all(['id', 'question']);
 
@@ -93,7 +96,7 @@ class ForgotPasswordSecurityController extends Controller
     }
 
     // Show the form to update the password once security is verified
-    public function showResetPasswordForm(Request $request): Response
+    public function showResetPasswordForm(Request $request)
     {
         if (!session('security_verified')) {
             return redirect()->route('password.username');
