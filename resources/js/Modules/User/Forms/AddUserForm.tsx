@@ -90,19 +90,6 @@ const AddUserForm: React.FC<IProps> = ({ isOpened, close }) => {
                     />
 
                     <Select
-                        id="workflow_role"
-                        type="text"
-                        name="workflow_role"
-                        label="Workflow Role"
-                        value={data.workflow_role}
-                        placeholder="Pick value"
-                        data={["Reviewer", "Approver"]}
-                        onChange={(_value, option) =>
-                            setData("workflow_role", option.value)
-                        }
-                    />
-
-                    <Select
                         id="role"
                         name="role"
                         label="Role"
