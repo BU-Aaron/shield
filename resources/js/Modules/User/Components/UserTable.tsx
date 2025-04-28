@@ -45,10 +45,6 @@ const UserTable: React.FC<UserTableProps> = ({
                 { accessor: "email", noWrap: true },
                 { accessor: "office_position", noWrap: true },
                 {
-                    accessor: "workflow_role",
-                    title: "Workflow Role",
-                },
-                {
                     accessor: "system_role",
                     title: "System Role",
                 },

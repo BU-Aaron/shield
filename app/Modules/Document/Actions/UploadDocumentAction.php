@@ -4,7 +4,6 @@ namespace Modules\Document\Actions;
 
 use Modules\Document\Data\UploadDocumentData;
 use Modules\Document\Models\Document;
-use Modules\DocumentApproval\Actions\CreateDocumentApprovalFromWorkflowAction;
 use Modules\Item\Actions\CreateItemAction;
 use Modules\Item\Data\CreateItemData;
 use Modules\NumberingScheme\Actions\ApplyDocumentNumberAction;
@@ -16,7 +15,6 @@ class UploadDocumentAction
 {
     public function __construct(
         protected CreateItemAction $createItemAction,
-        protected CreateDocumentApprovalFromWorkflowAction $createDocumentApprovalFromWorkflowAction,
         protected ApplyDocumentNumberAction $applyDocumentNumberAction,
         protected CreateFolderAction $createFolderAction
     ) {}
@@ -112,9 +110,8 @@ class UploadDocumentAction
                     ->causedBy(Auth::id())
                     ->log("Document '{$document->name}' uploaded");
 
-                // Apply numbering scheme and create approval workflow.
+                // Apply numbering scheme.
                 $this->applyDocumentNumberAction->execute($document);
-                $this->createDocumentApprovalFromWorkflowAction->execute($document);
 
                 // Inherit sharing permissions from the parent folder.
                 $parentItem = $item->parent;

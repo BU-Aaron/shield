@@ -7,14 +7,12 @@ use Modules\Document\Data\UploadDocumentVersionData;
 use Modules\Document\Models\Document;
 use Modules\Document\Models\DocumentHasVersion;
 use Illuminate\Support\Facades\Storage;
-use Modules\DocumentApproval\Actions\CreateDocumentApprovalFromWorkflowAction;
 use Modules\NumberingScheme\Actions\ApplyDocumentNumberAction;
 
 class UploadDocumentVersionAction
 {
     public function __construct(
         protected ApplyDocumentNumberAction $applyDocumentNumberAction,
-        protected CreateDocumentApprovalFromWorkflowAction $createDocumentApprovalFromWorkflowAction,
     ) {}
 
     public function execute(UploadDocumentVersionData $data): DocumentHasVersion
@@ -52,8 +50,6 @@ class UploadDocumentVersionAction
             ->log("Uploaded new version for document {$document->name}");
 
         $this->applyDocumentNumberAction->execute($document);
-
-        $this->createDocumentApprovalFromWorkflowAction->execute($document);
 
         return $version;
     }

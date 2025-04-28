@@ -21,7 +21,6 @@ class RegisterUserAction
             'email' => $data->email,
             'password' => Hash::make($defaultPassword),
             'office_position' => $data->office_position,
-            'workflow_role' => $data->workflow_role,
             'system_role' => $data->system_role,
         ]);
 

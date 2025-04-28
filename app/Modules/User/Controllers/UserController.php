@@ -98,21 +98,6 @@ class UserController extends Controller
         return redirect()->back();
     }
 
-    public function getUsersApprovalRole(string $type): JsonResponse
-    {
-        if (!in_array($type, ['reviewal', 'approval'])) {
-            return response()->json(['error' => 'Invalid workflow type'], 400);
-        }
-
-        if ($type == 'reviewal') {
-            $users = User::where('workflow_role', 'reviewer')->get();
-        } elseif ($type == 'approval') {
-            $users = User::where('workflow_role', 'approver')->get();
-        }
-
-        return response()->json($users);
-    }
-
     public function getUsers(): JsonResponse
     {
         $users = User::all();
