@@ -37,7 +37,7 @@ const BackupButton = () => {
         }
     };
 
-    return (
+    /*return (
         <Card
             shadow="xs"
             radius="sm"
@@ -73,7 +73,7 @@ const BackupButton = () => {
                 </div>
             </Group>
         </Card>
-    );
+    );*/
 };
 
 export default BackupButton;
