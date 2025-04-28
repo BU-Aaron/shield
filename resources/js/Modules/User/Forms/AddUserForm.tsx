@@ -58,7 +58,7 @@ const AddUserForm: React.FC<IProps> = ({ isOpened, close }) => {
                         error={errors.email}
                     />
 
-                    <TextInput
+                    {/* <TextInput
                         disabled
                         id="password"
                         type="text"

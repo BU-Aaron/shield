@@ -22,12 +22,16 @@ export default function ItemDropzone({
             accept={{
                 "application/pdf": [],
                 "application/msword": [],
-                "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
-                    [],
+                "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [],
+                "video/mp4": [],
+                "video/mpeg": [],
+                "video/ogg": [],
+                "video/quicktime": [],
+                "video/webm": [],
                 "image/png": [],
                 "image/jpeg": [],
             }}
-            maxSize={10 * 1024 ** 2} // Optional: Set a maximum file size (e.g., 10MB)
+            maxSize={10 * 1024 * 1024 ** 2} // Optional: Set a maximum file size (e.g., 10MB)
             styles={{
                 root: {
                     border: "none",

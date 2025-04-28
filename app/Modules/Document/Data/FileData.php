@@ -14,8 +14,13 @@ class FileData extends Data
             'application/pdf',
             'application/msword',
             'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'video/mp4',
+            'video/mpeg',
+            'video/ogg',
+            'video/quicktime',
+            'video/webm',
             'image/png',
-            'image/jpeg'
+            'image/jpeg',
         ])]
         public UploadedFile $file,
         public ?string $relativePath = '' // Added optional relativePath property
