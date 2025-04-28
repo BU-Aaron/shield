@@ -1,5 +1,6 @@
 import { IconLock, IconUser } from "@tabler/icons-react";
 import {
+    Anchor,
     Button,
     Checkbox,
     Flex,
@@ -9,6 +10,7 @@ import {
     TextInput,
 } from "@mantine/core";
 import { useLoginForm } from "../Hooks/use-login-form";
+import { Link } from "@inertiajs/react";
 
 export default function LoginForm() {
     const { data, setData, submit, processing, errors } = useLoginForm();
@@ -76,6 +78,14 @@ export default function LoginForm() {
                         Login
                     </Button>
                 </Flex>
+                <Anchor
+                    component={Link}
+                    href={route("password.username")}
+                    ta="center"
+                    size="sm"
+                >
+                    Forgot Password?
+                </Anchor>
             </Stack>
         </form>
     );
