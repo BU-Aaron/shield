@@ -42,6 +42,7 @@ const UserTable: React.FC<UserTableProps> = ({
             onPageChange={onPageChange}
             columns={[
                 { accessor: "name", noWrap: true },
+                { accessor: "username", noWrap: true },
                 { accessor: "email", noWrap: true },
                 { accessor: "office_position", noWrap: true },
                 {
