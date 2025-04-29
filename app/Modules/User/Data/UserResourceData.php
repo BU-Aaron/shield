@@ -10,6 +10,7 @@ class UserResourceData extends Resource
     public function __construct(
         public int $id,
         public string $name,
+        public string $username,
         public string $email,
         public string $workflow_role,
         public string $office_position,
@@ -21,6 +22,7 @@ class UserResourceData extends Resource
         return new self(
             id: $user->id,
             name: $user->name,
+            username:$user->username,
             email: $user->email,
             workflow_role: $user->workflow_role ?? "",
             office_position: $user->office_position ?? "",
