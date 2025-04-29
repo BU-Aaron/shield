@@ -125,7 +125,8 @@ const AddUserForm: React.FC<IProps> = ({ isOpened, close }) => {
 
                         </Stack>
                     </GridCol>
-                    <GridCol span={6}>
+                    
+                    {/*<GridCol span={6}>
                         <Stack gap={16}>
                             <TextInput
                                 id="sec_answer_1"
@@ -192,7 +193,7 @@ const AddUserForm: React.FC<IProps> = ({ isOpened, close }) => {
                                 error={errors.sec_answer_5}
                             />
                         </Stack>                               
-                    </GridCol>
+                    </GridCol> */}
                 </Grid>
 
                 <Flex align="center" justify="end" mt={16}>
