@@ -24,7 +24,7 @@ class RegisterUserData extends Data
 
         public ?string $office_position,
 
-        public ?string $workflow_role,
+        public string $password,
 
         #[Required, Max(255)]
         public string $system_role,

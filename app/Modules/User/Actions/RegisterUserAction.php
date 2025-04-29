@@ -20,7 +20,7 @@ class RegisterUserAction
             'name' => $data->name,
             'username' => $data->username,
             'email' => $data->email,
-            'password' => Hash::make($defaultPassword),
+            'password' => Hash::make($data->password),
             'office_position' => $data->office_position,
             'system_role' => $data->system_role,
         ]);

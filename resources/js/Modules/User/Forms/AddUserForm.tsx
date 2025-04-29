@@ -67,13 +67,14 @@ const AddUserForm: React.FC<IProps> = ({ isOpened, close }) => {
                         error={errors.email}
                     />
 
-                    {/* <TextInput
-                        disabled
+                    <TextInput
                         id="password"
                         type="text"
                         name="password"
-                        value={"BU-IRO-Arquivo"}
-                        label="Default Password"
+                        placeholder="Enter Password"
+                        onChange={(e) => setData("password", e.target.value)}
+                        label="Password"
+                        error={errors.password}
                     />
 
                     {/* <TextInput

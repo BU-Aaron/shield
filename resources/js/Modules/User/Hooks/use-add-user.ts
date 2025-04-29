@@ -10,11 +10,12 @@ export function useAddUser({ close }: IProps) {
     const { data, setData, post, processing, errors, reset } =
         useForm<RegisterUserData>({
             name: "",
+            username: "", 
             email: "",
-            username: "",
+            password:"",
             office_position: "",
-            workflow_role: "",
             system_role: "",
+            
         });
 
     const submit: React.FormEventHandler = (e) => {
