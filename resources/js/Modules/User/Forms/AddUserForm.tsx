@@ -115,6 +115,9 @@ const AddUserForm: React.FC<IProps> = ({ isOpened, close }) => {
                         }
                         error={errors.system_role}
                     />
+                    <Text size="med" fw={400}>
+                    P.S. Please log-in immediately after registering and set the security questions for the password reset module.
+                    </Text>
                 </Stack>
 
                 <Flex align="center" justify="end" mt={16}>
