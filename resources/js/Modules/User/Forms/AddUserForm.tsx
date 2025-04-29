@@ -48,6 +48,15 @@ const AddUserForm: React.FC<IProps> = ({ isOpened, close }) => {
                         error={errors.name}
                     />
 
+                <TextInput
+                        id="username"
+                        type="text"
+                        name="username"
+                        value={data.username}
+                        label="Username"
+                        onChange={(e) => setData("username", e.target.value)}
+                        error={errors.username}
+                    />
                     <TextInput
                         id="email"
                         type="email"

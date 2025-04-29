@@ -19,6 +19,9 @@ class RegisterUserData extends Data
         #[Required, Email, Max(255), Unique('users', 'email')]
         public string $email,
 
+        #[Required, Max(255)]
+        public string $username,
+
         public ?string $office_position,
 
         public ?string $workflow_role,

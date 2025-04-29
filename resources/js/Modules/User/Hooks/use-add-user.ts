@@ -11,6 +11,7 @@ export function useAddUser({ close }: IProps) {
         useForm<RegisterUserData>({
             name: "",
             email: "",
+            username: "",
             office_position: "",
             workflow_role: "",
             system_role: "",

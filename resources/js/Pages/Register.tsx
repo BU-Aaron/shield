@@ -6,6 +6,7 @@ import { Anchor, Button, Flex, Stack, TextInput } from "@mantine/core";
 export default function Register() {
     const { data, setData, post, processing, errors, reset } = useForm({
         name: "",
+        username: "",
         email: "",
         password: "",
         password_confirmation: "",
@@ -38,6 +39,19 @@ export default function Register() {
                         leftSectionPointerEvents="none"
                         label="Name"
                         onChange={(e) => setData("name", e.target.value)}
+                        error={errors.name}
+                        required
+                    />
+
+                    <TextInput
+                        id="username"
+                        type="username"
+                        name="username"
+                        value={data.name}
+                        autoComplete="username"
+                        leftSectionPointerEvents="none"
+                        label="Username"
+                        onChange={(e) => setData("username", e.target.value)}
                         error={errors.name}
                         required
                     />
