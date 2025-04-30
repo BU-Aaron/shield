@@ -15,7 +15,7 @@ export default function Login({
             <Head title="Log in" />
 
             {status && (
-                <Text c="green" mb={16} size="sm" fw={500}>
+                <Text c="green" mb={16} size="sm" fw={500} ta="center">
                     {status}
                 </Text>
             )}
