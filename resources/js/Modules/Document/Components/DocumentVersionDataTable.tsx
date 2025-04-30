@@ -41,7 +41,7 @@ const DocumentVersionsDataTable: React.FC<DocumentVersionsDataTableProps> = ({
                     ),
                 },
                 { accessor: "uploaded_at", title: "Uploaded At" },
-                {
+                /*{
                     accessor: "actions",
                     title: "Actions",
                     render: (record: DocumentVersionResourceData) => (
@@ -70,7 +70,7 @@ const DocumentVersionsDataTable: React.FC<DocumentVersionsDataTableProps> = ({
                             </a>
                         </Group>
                     ),
-                },
+                },*/
             ]}
             records={versions}
             highlightOnHover
