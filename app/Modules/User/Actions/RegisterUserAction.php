@@ -23,6 +23,8 @@ class RegisterUserAction
             'password' => Hash::make($data->password),
             'office_position' => $data->office_position,
             'system_role' => $data->system_role,
+            'security_question_id' => $data->security_question_id,
+            'security_question_answer' => Hash::make($data->security_question_answer),
         ]);
 
         $user->assignRole($data->system_role);

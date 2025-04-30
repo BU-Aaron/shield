@@ -10,11 +10,11 @@ class SecurityQuestionSeeder extends Seeder
     public function run(): void
     {
         $questions = [
-            'What was your childhood nickname?',
-            'What is the name of your favorite childhood friend?',
-            'What was your dream job as a child?',
-            'What is the name of your first pet?',
-            'What is your mother\'s maiden name?',
+            "What is your mother's maiden name?",
+            "What is the name of your first pet?",
+            "What is your father's name?",
+            "What city were you born in?",
+            "What was the name of your elementary school?",
         ];
 
         foreach ($questions as $question) {

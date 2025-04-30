@@ -28,5 +28,11 @@ class RegisterUserData extends Data
 
         #[Required, Max(255)]
         public string $system_role,
+
+        #[Required, Max(255)]
+        public string $security_question_answer,
+
+        #[Required, Max(255)]
+        public string $security_question_id,
     ) {}
 }

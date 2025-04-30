@@ -28,6 +28,8 @@ class User extends Authenticatable
         'password',
         'office_position',
         'system_role',
+        'security_question_answer',
+        'security_question_id',
     ];
 
     /**

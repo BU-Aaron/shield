@@ -1,3 +1,5 @@
+import internal from "stream";
+
 export interface RegisterUserData {
     name: string;
     username: string;
@@ -6,4 +8,6 @@ export interface RegisterUserData {
     workflow_role?: string;
     system_role: string;
     password: string;
+    security_question_id: string;
+    security_question_answer: string;
 }

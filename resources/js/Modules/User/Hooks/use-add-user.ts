@@ -15,7 +15,8 @@ export function useAddUser({ close }: IProps) {
             password:"",
             office_position: "",
             system_role: "",
-            
+            security_question_id: "",
+            security_question_answer: "",
         });
 
     const submit: React.FormEventHandler = (e) => {

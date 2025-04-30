@@ -36,11 +36,9 @@ const AddUserForm: React.FC<IProps> = ({ isOpened, close }) => {
                     Add User
                 </Text>
             }
-            size={950}
+            size={450}
         >
-            <form onSubmit={submit}>
-                <Grid gutter={24}> 
-                    <GridCol span={6}> 
+            <form onSubmit={submit}> 
                         <Stack gap={16}>
                             <TextInput
                                 id="name"
@@ -51,6 +49,7 @@ const AddUserForm: React.FC<IProps> = ({ isOpened, close }) => {
                                 placeholder="Enter Name"
                                 onChange={(e) => setData("name", e.target.value)}
                                 error={errors.name}
+                                required
                             />
 
                         <TextInput
@@ -62,6 +61,7 @@ const AddUserForm: React.FC<IProps> = ({ isOpened, close }) => {
                                 placeholder="Enter Username"
                                 onChange={(e) => setData("username", e.target.value)}
                                 error={errors.username}
+                                required
                             />
                             <TextInput
                                 id="email"
@@ -69,8 +69,10 @@ const AddUserForm: React.FC<IProps> = ({ isOpened, close }) => {
                                 name="email"
                                 value={data.email}
                                 label="Email"
+                                placeholder="Enter Email"
                                 onChange={(e) => setData("email", e.target.value)}
                                 error={errors.email}
+                                required
                             />
 
                             <TextInput
@@ -81,6 +83,7 @@ const AddUserForm: React.FC<IProps> = ({ isOpened, close }) => {
                                 onChange={(e) => setData("password", e.target.value)}
                                 label="Password"
                                 error={errors.password}
+                                required
                             />
 
                             {/* <TextInput
@@ -104,6 +107,7 @@ const AddUserForm: React.FC<IProps> = ({ isOpened, close }) => {
                                     setData("office_position", e.target.value)
                                 }
                                 error={errors.office_position}
+                                required
                             />
 
                             <Select
@@ -121,80 +125,43 @@ const AddUserForm: React.FC<IProps> = ({ isOpened, close }) => {
                                         setData("system_role", value || "")
                                     }
                                     error={errors.system_role}
-                                />
-
-                        </Stack>
-                    </GridCol>
-                    
-                    {/*<GridCol span={6}>
-                        <Stack gap={16}>
-                            <TextInput
-                                id="sec_answer_1"
-                                type="text"
-                                name="sec_answer_1"
-                                value={data.sec_answer_1}
-                                label="Security Question 1"
-                                placeholder="What was your childhood nickname?"
-                                onChange={(e) =>
-                                    setData("sec_answer_1", e.target.value)
-                                }
-                                error={errors.sec_answer_1}
+                                    required
                             />
 
-                            <TextInput
-                                id="sec_answer_2"
-                                type="text"
-                                name="sec_answer_2"
-                                value={data.sec_answer_2}
-                                label="Security Question 2"
-                                placeholder="What is the name of your favorite childhood friend??"
-                                onChange={(e) =>
-                                    setData("sec_answer_2", e.target.value)
-                                }
-                                error={errors.sec_answer_2}
+                            <hr style={{ margin: '1rem 0' }} />
+
+                            <Select
+                                id="security_question_id"
+                                name="security_question_id"
+                                label="Security Question"
+                                placeholder="Select a security question"
+                                data={[
+                                    { value: "1", label: "What is your mother's maiden name?" },
+                                    { value: "2", label: "What was the name of your first pet?" },
+                                    { value: "3", label: "What is your father's name?" },
+                                    { value: "4", label: "What city were you born in?" },
+                                    { value: "5", label: "What was the name of your elementary school?" },
+                                ]}
+                                value={data.security_question_id}
+                                onChange={(value) => setData("security_question_id", value || "")}
+                                error={errors.security_question_id}
+                                required
                             />
 
-                            <TextInput
-                                id="sec_answer_3"
-                                type="text"
-                                name="sec_answer_3"
-                                value={data.sec_answer_3}
-                                label="Security Question 3"
-                                placeholder="What was your dream job as a child?"
-                                onChange={(e) =>
-                                    setData("sec_answer_3", e.target.value)
-                                }
-                                error={errors.sec_answer_3}
-                            />
 
                             <TextInput
-                                id="sec_answer_4"
+                                id="security_question_answer"
+                                name="security_question_answer"
+                                label="Your Answer"
+                                placeholder="Enter your answer"
                                 type="text"
-                                name="sec_answer_4"
-                                value={data.sec_answer_4}
-                                label="Security Question 4"
-                                placeholder="What is the name of your first pet?"
-                                onChange={(e) =>
-                                    setData("sec_answer_4", e.target.value)
-                                }
-                                error={errors.sec_answer_4}
+                                value={data.security_question_answer}
+                                onChange={(e) => setData("security_question_answer", e.target.value)}
+                                error={errors.security_question_answer}
+                                required
                             />
 
-                            <TextInput
-                                id="sec_answer_5"
-                                type="text"
-                                name="sec_answer_5"
-                                value={data.sec_answer_5}
-                                label="Security Question 5"
-                                placeholder="What is your mother's maiden name?"
-                                onChange={(e) =>
-                                    setData("sec_answer_5", e.target.value)
-                                }
-                                error={errors.sec_answer_5}
-                            />
-                        </Stack>                               
-                    </GridCol> */}
-                </Grid>
+                            </Stack>
 
                 <Flex align="center" justify="end" mt={16}>
                     <Button variant="outline" onClick={handleClose}>
