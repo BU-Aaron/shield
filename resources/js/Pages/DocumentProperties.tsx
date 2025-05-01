@@ -269,19 +269,18 @@ const DocumentPropertiesPage: React.FC<IProps> = ({
                             )}*/}
 
                         <Button
-                            variant="subtle"
-                            component="a"
-                            href={route("document.view", {
-                                document: document.item_id,
-                            })}
-                            target="_blank"
-                            color="blue.5"
-                            leftSection={<IconEye size={18} />}
-                            justify="left"
-                            fullWidth
+                        variant="subtle"
+                        component="a"
+                        href={route("document.view", { document: document.item_id })}
+                        target="_blank"  // This ensures the link opens in a new tab
+                        color="blue.5"
+                        leftSection={<IconEye size={18} />}
+                        justify="left"
+                        fullWidth
                         >
-                            View Document
+                        View Document
                         </Button>
+
 
                         {!isArchived &&
                             (userRole === "editor" || userRole === "admin") && (

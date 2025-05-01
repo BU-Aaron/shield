@@ -187,9 +187,31 @@ class DocumentController extends Controller
     }
 
     public function view(Document $document)
-    {
-        return response()->file(Storage::disk('public')->path($document->file_path), [
-            'Content-Type' => $document->mime_type,
-        ]);
+{
+    $path = Storage::disk('public')->path($document->file_path);
+    $mime = $document->mime_type;
+
+    if (str_starts_with($mime, 'image/') || $mime === 'application/pdf' || str_starts_with($mime, 'text/')) {
+        return response()->file($path, ['Content-Type' => $mime]);
     }
+
+    if (in_array($mime, [
+        'application/msword',                      // .doc
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+        'application/vnd.ms-excel',               // .xls
+        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+        'application/vnd.ms-powerpoint',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    ])) {
+        $previewUrl = 'https://view.officeapps.live.com/op/view.aspx?src=' . urlencode(asset('storage/' . $document->file_path));
+        return redirect()->away($previewUrl);
+    }
+
+    // For unsupported types, show a generic download or message
+    return Inertia::render('UnsupportedPreview', [
+        'fileUrl' => asset('storage/' . $document->file_path),
+        'fileName' => $document->name,
+        'mimeType' => $mime,
+    ]);
+}
 }
