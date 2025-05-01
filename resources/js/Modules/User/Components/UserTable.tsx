@@ -43,7 +43,6 @@ const UserTable: React.FC<UserTableProps> = ({
             columns={[
                 { accessor: "name", noWrap: true },
                 { accessor: "username", noWrap: true },
-                { accessor: "email", noWrap: true },
                 { accessor: "office_position", noWrap: true },
                 {
                     accessor: "system_role",
