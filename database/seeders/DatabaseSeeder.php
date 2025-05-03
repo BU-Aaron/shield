@@ -44,23 +44,6 @@ class DatabaseSeeder extends Seeder
             'status' => 'system',
         ]);
 
-        Metadata::create([
-            'name' => 'Due In',
-            'type' => 'Date',
-            'status' => 'system',
-        ]);
-
-        Metadata::create([
-            'name' => 'Review Status',
-            'type' => 'Text',
-            'status' => 'system',
-        ]);
-
-        Metadata::create([
-            'name' => 'Approval Status',
-            'type' => 'Text',
-            'status' => 'system',
-        ]);
 
         // Create Custom Metadata
         Metadata::create([
@@ -76,22 +59,11 @@ class DatabaseSeeder extends Seeder
         ]);
 
         Metadata::create([
-            'name' => 'Subject',
+            'name' => 'Nature of Crime',
             'type' => 'Text',
             'status' => 'custom',
         ]);
 
-        Metadata::create([
-            'name' => 'For',
-            'type' => 'Text',
-            'status' => 'custom',
-        ]);
-
-        Metadata::create([
-            'name' => 'Thru',
-            'type' => 'Text',
-            'status' => 'custom',
-        ]);
 
         // Create Workspace through folder
         $createWorkspaceAction = app(CreateWorkspaceAction::class);

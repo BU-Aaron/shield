@@ -82,7 +82,7 @@ const MetadataFilterModal: React.FC<MetadataFilterModalProps> = ({
             opened={isOpen}
             onClose={() => closeModal("metadataFilterModal")}
             title="Filter by Metadata"
-            size="lg"
+            size="xxxl"
         >
             <Stack>
                 {filters.map((filter) => (
@@ -99,33 +99,31 @@ const MetadataFilterModal: React.FC<MetadataFilterModalProps> = ({
                                 handleChange(filter.id, "field", value || "")
                             }
                             required
-                            style={{ flex: 1 }}
+                            style={{ flex: 3 }}
                         />
                         <Select
-                            label="Operator"
-                            placeholder="Select operator"
+                            label="File Filtering"
+                            placeholder="Select filtering arrangement"
                             data={[
                                 { value: "includes", label: "Includes" },
                                 { value: "excludes", label: "Excludes" },
-                                { value: "is", label: "Is" },
-                                { value: "is_not", label: "Is Not" },
                             ]}
                             value={filter.operator}
                             onChange={(value) =>
                                 handleChange(filter.id, "operator", value || "")
                             }
                             required
-                            style={{ flex: 1 }}
+                            style={{ flex: 4 }}
                         />
                         <TextInput
-                            label="Value"
-                            placeholder="Enter value"
+                            label="Info"
+                            placeholder="Enter Info"
                             value={filter.value}
                             onChange={(e) =>
                                 handleChange(filter.id, "value", e.target.value)
                             }
                             required
-                            style={{ flex: 2 }}
+                            style={{ flex: 4 }}
                         />
                         {filters.length > 1 && (
                             <ActionIcon

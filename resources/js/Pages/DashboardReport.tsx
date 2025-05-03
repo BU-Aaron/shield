@@ -320,7 +320,7 @@ const DashboardReportPage: React.FC<DashboardReportProps> = ({
                                         label: "Inventory Reports",
                                     },
                                 ]}
-                                style={{ width: 200 }}
+                                style={{ width: 300 }}
                             />
 
                             <Button
