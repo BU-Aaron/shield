@@ -10,7 +10,7 @@ interface UnsupportedPreviewProps {
 export default function UnsupportedPreview({ fileUrl, fileName, mimeType }: UnsupportedPreviewProps) {
   return (
     <>
-      <Head title="Unsupported File Preview" />
+      <Head title="File Preview" />
       <div className="max-w-xl mx-auto mt-20 text-center p-6">
         <h1 className="text-2xl font-semibold mb-4">Preview Not Available</h1>
         <p className="text-gray-600 mb-6">
