@@ -47,25 +47,13 @@ const FolderPropertiesModal: React.FC<FolderPropertiesModalProps> = ({
                         required
                     />
                     <Select
-                        label={
-                            <>
-                                Category
-                                {data.category && (
-                                    <Text size="xs" c="dimmed" mt={4}>
-                                        Current category: <strong>{data.category}</strong>
-                                    </Text>
-                                )}
-                            </>
-                        }
+                        label="Category"
                         placeholder="Select category"
                         name="category"
                         data={[
                             "INV",
                             "INQ",
                             "UI",
-                            "Forensic Reports",
-                            "Finance/Invest",
-                            "Inventory Reports",
                         ]}
                         value={data.category ?? ""}
                         onChange={(value) => setData("category", value || "")}

@@ -44,8 +44,6 @@ const ItemTable: React.FC<ItemTableProps> = ({
                             <ItemIcon
                                 mime={mime ?? ""}
                                 isFolder={type === "folder"}
-                                approvalStatus={approval_status}
-                                reviewStatus={review_status}
                             />
                             <span>{name}</span>
                         </Group>
