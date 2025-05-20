@@ -15,6 +15,7 @@ use Modules\Dashboard\Data\RecentlyUploadedDocumentResource;
 use Modules\Dashboard\Data\SelectDashboardMetadataColumnData;
 use Modules\Metadata\Models\Metadata;
 use Modules\Document\Models\Document;
+use Modules\Folder\Models\Folder;
 use Modules\Dashboard\Helpers\DocumentStatusHelper;
 use Modules\Document\Data\DocumentResourceData;
 use Modules\Item\Data\ItemContentsResourceData;
@@ -48,7 +49,7 @@ class DashboardController extends Controller
 
         $counts = [];
         foreach ($categories as $category) {
-            $counts[$category] = Document::where('category', $category)
+            $counts[$category] = Folder::where('category', $category)
                 ->whereHas('item', function ($query) use ($user) {
                     if (!$user->hasRole('admin') && !$user->hasRole('viewer')) {
                         $query->where(function ($q) use ($user) {

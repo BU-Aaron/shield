@@ -39,11 +39,6 @@ class Folder extends Model
         return $this->hasOne(Workflow::class);
     }
 
-    public function numberingScheme(): HasOne
-    {
-        return $this->hasOne(NumberingScheme::class);
-    }
-
     public function userAccess(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'user_folder_access', 'folder_id', 'user_id')
