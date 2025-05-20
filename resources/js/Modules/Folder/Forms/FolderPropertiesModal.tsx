@@ -47,7 +47,16 @@ const FolderPropertiesModal: React.FC<FolderPropertiesModalProps> = ({
                         required
                     />
                     <Select
-                        label="Category"
+                        label={
+                            <>
+                                Category
+                                {data.category && (
+                                    <Text size="xs" c="dimmed" mt={4}>
+                                        Current category: <strong>{data.category}</strong>
+                                    </Text>
+                                )}
+                            </>
+                        }
                         placeholder="Select category"
                         name="category"
                         data={[

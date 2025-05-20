@@ -42,9 +42,6 @@ class DashboardController extends Controller
             'INV',              // will be used for the "INV" card
             'INQ',              // will be used for the "INQ" card
             'UI',               // will be used for the "UI" card
-            'Forensic Reports', // will be used for the "Forensic Reports" card
-            'Finance/Invest',   // will be used for the "Finance/Invest" card
-            'Inventory Reports' // will be used for the "Inventory Reports" card
         ];
 
         $counts = [];
@@ -93,8 +90,6 @@ class DashboardController extends Controller
                     category: $doc->category,
                     date_uploaded: $doc->updated_at,
                     mime: $doc->mime,
-                    review_status: '',
-                    approval_status: ''
                 );
             })
             ->toArray();

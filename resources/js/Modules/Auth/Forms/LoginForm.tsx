@@ -23,7 +23,7 @@ export default function LoginForm() {
                         Login
                     </Text>
                     <Text fw={500} fz={16} ta="center" c="gray.6">
-                        RACU 5 Document Management System
+                        RACU 5 File Archive
                     </Text>
                 </div>
 

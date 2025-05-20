@@ -307,18 +307,6 @@ const DashboardReportPage: React.FC<DashboardReportProps> = ({
                                         value: "UI",
                                         label: "UI",
                                     },
-                                    {
-                                        value: "Forensic Reports",
-                                        label: "Forensic Reports",
-                                    },
-                                    {
-                                        value: "Finance/Invest",
-                                        label: "Finance/Invest",
-                                    },
-                                    {
-                                        value: "Inventory Reports",
-                                        label: "Inventory Reports",
-                                    },
                                 ]}
                                 style={{ width: 300 }}
                             />

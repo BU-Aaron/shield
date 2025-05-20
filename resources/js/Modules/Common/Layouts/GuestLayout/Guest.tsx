@@ -27,9 +27,8 @@ export default function Guest({ children }: PropsWithChildren) {
             <Paper shadow="md" withBorder radius="lg" className={classes.card}>
                 {children}
 
-                {/* Powered by Arquivo Footer */}
                 <Text size="sm" ta="center" mt="md" c="dimmed">
-                    Powered by RACU 5
+                    {'\u00A9'} 2025 Rosso Corsa Creations
                 </Text>
             </Paper>
         </Flex>
