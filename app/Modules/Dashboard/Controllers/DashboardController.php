@@ -98,21 +98,10 @@ class DashboardController extends Controller
             })
             ->toArray();
 
-        // Create DashboardResource instance.
-        // We repurpose the old fields as follows:
-        //   • number_of_review_pending  => count for "INQ"
-        //   • number_of_review_accepted => count for "INV"
-        //   • number_of_review_rejected => count for "UI"
-        //   • number_of_approval_accepted => count for "Forensic Reports"
-        //   • number_of_approval_pending => count for "Finance/Invest"
-        //   • number_of_approval_rejected => count for "Inventory Reports"
         $dashboardData = new DashboardResource(
-            number_of_review_pending: $counts['INQ'],
-            number_of_review_accepted: $counts['INV'],
-            number_of_review_rejected: $counts['UI'],
-            number_of_approval_pending: $counts['Finance/Invest'],
-            number_of_approval_accepted: $counts['Forensic Reports'],
-            number_of_approval_rejected: $counts['Inventory Reports'],
+            number_of_inv: $counts['INV'],
+            number_of_inq: $counts['INQ'],
+            number_of_ui: $counts['UI'],
             number_of_documents: $totalDocuments,
             recently_uploaded_documents: $recently_uploaded_documents
         );

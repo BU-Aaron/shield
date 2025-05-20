@@ -10,11 +10,8 @@ export interface RecentlyUploadedDocument {
 
 export interface DashboardResource {
     number_of_documents: number;
-    number_of_review_pending: number;
-    number_of_review_accepted: number;
-    number_of_review_rejected: number;
-    number_of_approval_pending: number;
-    number_of_approval_accepted: number;
-    number_of_approval_rejected: number;
+    number_of_inv: number;
+    number_of_inq: number;
+    number_of_ui: number;
     recently_uploaded_documents: RecentlyUploadedDocument[];
 }
