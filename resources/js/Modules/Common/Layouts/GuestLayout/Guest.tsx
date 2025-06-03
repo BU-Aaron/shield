@@ -20,7 +20,7 @@ export default function Guest({ children }: PropsWithChildren) {
         >
             <div>
                 <Link href="/">
-                    <OfficeLogo h={72} w={72} /> {/* Adjust logo size for mobile */}
+                    <OfficeLogo h={200} w={200} /> {/* Adjust logo size for mobile */}
                 </Link>
             </div>
 
