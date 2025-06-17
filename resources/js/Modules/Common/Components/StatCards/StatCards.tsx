@@ -56,11 +56,12 @@ export function StatCards({ dashboard }: StatCardsProps) {
     const renderCard = (stat: typeof data[number], doubleHeight: boolean = false) => {
         const Icon = icons[stat.icon];
 
-        const handleClick = () => {
+        /*const handleClick = () => {
             if (stat.statusParam) {
                 router.visit(`/dashboard/reports?document_status=${stat.statusParam}`);
             }
         };
+        */
 
         return (
             <Paper
@@ -68,7 +69,7 @@ export function StatCards({ dashboard }: StatCardsProps) {
                 p="lg"
                 radius="md"
                 key={stat.title}
-                onClick={handleClick}
+                // onClick={handleClick}
                 shadow="xs"
                 style={{
                     cursor: stat.statusParam ? "pointer" : "default",
