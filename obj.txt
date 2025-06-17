@@ -1,0 +1,7 @@
+List set of objectives left for preparation of full system roll out
+
+# Folder Count needs to be refined for system statcards
+# Change Template for Report Module, document template in D:\- My Documents\Desktop\SARAYAN
+# Create feature to show folder designation if INV, INQ, UI 
+# Statcards should only show the folders under the same designation
+# Folders and files can be sorted via change of articulation.
